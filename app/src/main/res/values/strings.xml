@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ImitationQQMusic</string>
+    <string name="item_music">音乐馆</string>
+    <string name="item_recommend">推荐</string>
+    <string name="item_local">我的</string>
+    <string name="initMusicName">有你就好</string>
+</resources>

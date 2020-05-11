@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/base_navigation"
+    app:startDestination="@id/musicFragment">
+
+    <fragment
+        android:id="@+id/localFragment"
+        android:name="com.example.imitationqqmusic.view.localfragment.LocalFragment"
+        android:label="我的"
+        tools:layout="@layout/local_fragment" />
+    <fragment
+        android:id="@+id/musicFragment"
+        android:name="com.example.imitationqqmusic.view.musicfragment.MusicFragment"
+        android:label="音乐馆"
+        tools:layout="@layout/music_fragment" />
+    <fragment
+        android:id="@+id/recommendedFragment"
+        android:name="com.example.imitationqqmusic.view.recommendedfragment.RecommendedFragment"
+        android:label="推荐"
+        tools:layout="@layout/recommended_fragment" />
+</navigation>
