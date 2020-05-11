@@ -6,5 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".view.musicfragment.MusicFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="MUSIC"
+        android:textSize="40sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
