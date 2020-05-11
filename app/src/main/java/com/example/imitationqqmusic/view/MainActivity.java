@@ -10,7 +10,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.imitationqqmusic.R;
 import com.example.imitationqqmusic.base.BaseActivity;
 import com.example.imitationqqmusic.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 import java.util.Objects;
 
