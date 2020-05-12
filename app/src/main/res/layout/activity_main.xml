@@ -4,10 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".view.main.MainActivity"
+    android:id="@+id/main_root">
 
     <include
-        layout="@layout/toolbar"/>
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
@@ -19,9 +24,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/cl_footer"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/base_navigation" />
+        app:navGraph="@navigation/base_navigation"/>
 
     <include
+        android:id="@+id/cl_footer"
         layout="@layout/footer"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

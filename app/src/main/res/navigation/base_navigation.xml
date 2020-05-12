@@ -9,7 +9,15 @@
         android:id="@+id/localFragment"
         android:name="com.example.imitationqqmusic.view.localfragment.LocalFragment"
         android:label="我的"
-        tools:layout="@layout/local_fragment" />
+        tools:layout="@layout/local_fragment" >
+        <action
+            android:id="@+id/action_localFragment_to_testFragment"
+            app:destination="@id/testFragment"
+            app:enterAnim="@anim/new_activity_enter"
+            app:exitAnim="@anim/new_activity_exit"
+            app:popEnterAnim="@anim/old_activity_exit"
+            app:popExitAnim="@anim/old_activity_enter" />
+    </fragment>
     <fragment
         android:id="@+id/musicFragment"
         android:name="com.example.imitationqqmusic.view.musicfragment.MusicFragment"
@@ -20,4 +28,9 @@
         android:name="com.example.imitationqqmusic.view.recommendedfragment.RecommendedFragment"
         android:label="推荐"
         tools:layout="@layout/recommended_fragment" />
+    <fragment
+        android:id="@+id/testFragment"
+        android:name="com.example.imitationqqmusic.view.TestFragment"
+        android:label="fragment_test"
+        tools:layout="@layout/fragment_test" />
 </navigation>

@@ -4,4 +4,7 @@
     <string name="item_recommend">推荐</string>
     <string name="item_local">我的</string>
     <string name="initMusicName">有你就好</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
