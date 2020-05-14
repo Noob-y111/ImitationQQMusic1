@@ -1,16 +1,24 @@
 package com.example.imitationqqmusic.view.main;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.view.View;
+
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.imitationqqmusic.R;
 import com.example.imitationqqmusic.adapter.FooterPagerAdapter;
 import com.example.imitationqqmusic.base.BaseActivity;
 import com.example.imitationqqmusic.databinding.ActivityMainBinding;
 import com.example.imitationqqmusic.model.SongItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,19 +86,61 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 System.out.println("==============================aBoolean:" + aBoolean);
-                if (aBoolean) {
+                if (aBoolean){
                     binding.navigation.setVisibility(View.GONE);
-                } else {
+                    setStatusWithConfig(0);
+                }else {
                     binding.navigation.setVisibility(View.VISIBLE);
+                    setStatusBar();
                 }
+//                final ConstraintLayout.LayoutParams oldLayoutParam
+//                        = (ConstraintLayout.LayoutParams)binding.fragment.getLayoutParams();
+//                if (aBoolean) {
+//                    ((ConstraintLayout.LayoutParams) binding.clFooter.clFooter.getLayoutParams())
+//                            .goneBottomMargin = binding.navigation.getHeight();
+//                    binding.navigation.setVisibility(View.GONE);
+//
+//                    ObjectAnimator animator = ObjectAnimator.ofFloat(
+//                            binding.clFooter.clFooter,
+//                            "y",
+//                            binding.clFooter.clFooter.getY(),
+//                            binding.clFooter.clFooter.getY() + binding.navigation.getHeight());
+//                    animator.start();
+//                } else {
+//                    ((ConstraintLayout.LayoutParams) binding.clFooter.clFooter.getLayoutParams())
+//                            .goneBottomMargin = 0;
+//                    binding.navigation.setVisibility(View.GONE);
+//                    ObjectAnimator animator = ObjectAnimator.ofFloat(
+//                            binding.clFooter.clFooter,
+//                            "y",
+//                            binding.clFooter.clFooter.getY(),
+//                            binding.clFooter.clFooter.getY() - binding.navigation.getHeight());
+//                    animator.addListener(new Animator.AnimatorListener() {
+//                        @Override
+//                        public void onAnimationStart(Animator animation) {
+//                            binding.navigation.setVisibility(View.INVISIBLE);
+//                            binding.fragment.setLayoutParams(oldLayoutParam);
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            binding.navigation.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        public void onAnimationCancel(Animator animation) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animator animation) {
+//
+//                        }
+//                    });
+//                    animator.start();
+//                }
             }
         });
-    }
-
-    @Override
-    protected void setToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -103,9 +153,10 @@ public class MainActivity extends BaseActivity {
         return binding.navigation;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        Navigation.findNavController(binding.fragment).navigateUp();
-        return super.onSupportNavigateUp();
-    }
+//    @Override
+//    public boolean onSupportNavigateUp() {
+//        Navigation.findNavController(binding.fragment).navigateUp();
+//        return super.onSupportNavigateUp();
+//    }
+
 }

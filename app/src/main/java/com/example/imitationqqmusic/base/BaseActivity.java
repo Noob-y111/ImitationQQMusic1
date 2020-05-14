@@ -21,50 +21,48 @@ import java.util.Objects;
 @SuppressLint("Registered")
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setRootViewByBinding());
-        toolbar = findViewById(R.id.toolbar);
-        setToolbar();
         initNavigationAndWindow(getNavControllerId(), getBottomNavigationView());
         initView();
     }
 
     abstract protected View setRootViewByBinding();
     abstract protected void initView();
-    abstract protected void setToolbar();
     abstract protected int getNavControllerId();
     abstract protected BottomNavigationView getBottomNavigationView();
 
-    protected void initNavigationAndWindow(int navControllerId, BottomNavigationView navigation){
-        View view = getWindow().getDecorView();
-        int config;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            config = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        } else {
-            config = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            toolbar.setTitleTextColor(Color.WHITE);
-            toolbar.setBackground(getDrawable(R.color.colorPrimary));
-        }
+    protected void setStatusBar(){
+        setStatusWithConfig(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
 
-        view.setSystemUiVisibility(config);
+    protected void setStatusWithConfig(int config){
+        int localConfig = localConfig = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            localConfig = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                    config;
+        }
+        View view = getWindow().getDecorView();
+        view.setSystemUiVisibility(localConfig);
         view.setFitsSystemWindows(true);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+    }
 
+    protected void initNavigationAndWindow(int navControllerId, BottomNavigationView navigation){
+        setStatusBar();
         NavController navController = ((NavHostFragment) Objects
                 .requireNonNull(getSupportFragmentManager()
                         .findFragmentById(navControllerId))).getNavController();
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration
-                .Builder(navigation.getMenu())
-                .build();
+//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration
+//                .Builder(navigation.getMenu())
+//                .build();
 
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navigation, navController);
     }
 }

@@ -1,46 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/music_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="0dp"
         android:background="@color/colorPrimary"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="0dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <ProgressBar-->
-<!--        android:id="@+id/music_progress"-->
-<!--        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="5dp"-->
-<!--        android:backgroundTint="#888"-->
-<!--        android:progress="40"-->
-<!--        android:progressDrawable="@drawable/bg_pb"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@id/music_image"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--    android:progressDrawable="@drawable/bg_pb"-->
-
-    <!--    <ScrollView-->
-    <!--        android:id="@+id/sv_scroll"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:minWidth="100dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/music_image"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/music_progress"-->
-    <!--        app:layout_constraintBottom_toTopOf="@id/tv_singer"-->
-    <!--        app:layout_constraintEnd_toStartOf="@+id/iv_footer_play_pause"-->
-    <!--        android:layout_marginStart="10dp"-->
-    <!--        android:layout_marginEnd="10dp"-->
-    <!--        android:scrollbars="horizontal">-->
 
     <com.example.imitationqqmusic.custom.MarqueeTextView
         android:id="@+id/tv_music_name"
@@ -62,18 +37,6 @@
         app:layout_constraintStart_toEndOf="@+id/music_image"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--        android:layout_marginStart="10dp"-->
-    <!--        android:layout_marginEnd="10dp"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:minWidth="100dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/music_image"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/music_progress"-->
-    <!--        app:layout_constraintBottom_toTopOf="@id/tv_singer"-->
-    <!--        app:layout_constraintEnd_toStartOf="@+id/iv_footer_play_pause"-->
-
-    <!--    </ScrollView>-->
-
 
     <TextView
         android:id="@+id/tv_singer"
@@ -83,29 +46,11 @@
         android:layout_marginEnd="10dp"
         android:minWidth="100dp"
         android:singleLine="true"
+        android:text="你是谁"
         android:textColor="@color/blackGrayTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/music_image"
-        app:layout_constraintTop_toBottomOf="@id/tv_music_name"
-        android:text="你是谁"/>
-
-<!--    <ImageView-->
-<!--        android:id="@+id/iv_current_list"-->
-<!--        android:layout_width="30dp"-->
-<!--        android:layout_height="30dp"-->
-<!--        android:layout_marginEnd="20dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/music_progress" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/iv_footer_play_pause"-->
-<!--        android:layout_width="30dp"-->
-<!--        android:layout_height="30dp"-->
-<!--        android:layout_marginEnd="20dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/iv_current_list"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/music_progress" />-->
+        app:layout_constraintTop_toBottomOf="@id/tv_music_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
