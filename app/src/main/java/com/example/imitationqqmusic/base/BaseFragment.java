@@ -49,7 +49,9 @@ abstract public class BaseFragment extends Fragment {
     @NonNull
     abstract protected View setRootView();
     abstract protected void initView();
-    abstract protected void toMusicDetail(@NonNull Bundle bundle);
+    protected void toMusicDetail(@NonNull Bundle bundle){
+
+    }
     abstract protected int getToolBarId();
     @NonNull
     abstract protected String getTitle();
@@ -101,5 +103,14 @@ abstract public class BaseFragment extends Fragment {
 
     protected void onToolBarOptionMenuSelected(MenuItem menuItem){
 
+    }
+
+    protected void setTransparentStatusBar(int alpha, int color){
+        requireActivity().getWindow().setStatusBarColor(
+                Color.argb(alpha,
+                        Color.red(color),
+                        Color.green(color),
+                        Color.blue(color))
+        );
     }
 }

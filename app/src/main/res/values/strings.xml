@@ -8,4 +8,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="more">更多</string>
+    <string name="default_user_name">有你就好</string>
+    <string name="on_loading">正在加载...</string>
+    <string name="et_default_hint">点击搜索歌曲</string>
+    <string name="search_hint">搜索</string>
 </resources>

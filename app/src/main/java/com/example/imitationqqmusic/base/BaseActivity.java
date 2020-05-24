@@ -50,7 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         View view = getWindow().getDecorView();
         view.setSystemUiVisibility(localConfig);
         view.setFitsSystemWindows(true);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
     }
 
     protected void initNavigationAndWindow(int navControllerId, BottomNavigationView navigation){
@@ -64,5 +63,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navigation, navController);
+    }
+
+    protected void setTransparentStatusBar(int alpha, int color){
+        getWindow().setStatusBarColor(
+                Color.argb(alpha,
+                        Color.red(color),
+                        Color.green(color),
+                        Color.blue(color))
+        );
     }
 }

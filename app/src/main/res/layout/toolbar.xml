@@ -10,6 +10,17 @@
     app:titleTextColor="@color/blackTextColor"
     android:clickable="true"
     android:focusable="true"
-    app:layout_scrollFlags="scroll|enterAlways">
+    app:layout_scrollFlags="scroll">
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:hint="@string/search_hint"
+        android:gravity="center"
+        android:textColorHint="@color/grayTextColor"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_edit"
+        android:clickable="true"
+        android:focusable="true"/>
 
 </androidx.appcompat.widget.Toolbar>

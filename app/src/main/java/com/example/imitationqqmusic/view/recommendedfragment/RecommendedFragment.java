@@ -1,5 +1,6 @@
 package com.example.imitationqqmusic.view.recommendedfragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,7 @@ public class RecommendedFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-
+        super.setTransparentStatusBar(150, Color.WHITE);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class RecommendedFragment extends BaseFragment {
     @Override
     protected void onCreateOptionMenuOnToolBar(Toolbar toolbar) {
         super.onCreateOptionMenuOnToolBar(toolbar);
-        toolbar.inflateMenu(R.menu.test);
+        toolbar.inflateMenu(R.menu.default_black_more);
     }
 
     @NonNull

@@ -11,5 +11,10 @@
     <style name="normal">
         <item name="android:textSize">14sp</item>
     </style>
+    
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_qq_music</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
 </resources>

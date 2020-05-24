@@ -10,4 +10,5 @@
     <color name="blackGrayTextColor">#333</color>
     <color name="grayTextColor">#aaa</color>
     <color name="tabGrayTextColor">#888</color>
+    <color name="pressedColor">#eee</color>
 </resources>

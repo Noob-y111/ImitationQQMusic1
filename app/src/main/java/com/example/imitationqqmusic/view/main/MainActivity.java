@@ -1,13 +1,11 @@
 package com.example.imitationqqmusic.view.main;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
+import android.graphics.Color;
 import android.view.View;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentContainerView;
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
@@ -16,7 +14,7 @@ import com.example.imitationqqmusic.R;
 import com.example.imitationqqmusic.adapter.FooterPagerAdapter;
 import com.example.imitationqqmusic.base.BaseActivity;
 import com.example.imitationqqmusic.databinding.ActivityMainBinding;
-import com.example.imitationqqmusic.model.SongItem;
+import com.example.imitationqqmusic.model.bean.SongItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -45,7 +43,35 @@ public class MainActivity extends BaseActivity {
         SongItem songItem2 = new SongItem();
         songItem2.setName("我爱你3");
         songItem2.setSinger("你是谁3");
-        final FooterPagerAdapter adapter = new FooterPagerAdapter();
+
+        final FooterPagerAdapter adapter = new FooterPagerAdapter(new FooterPagerAdapter.OnItemClick() {
+            @Override
+            public void onClick(int position) {
+                binding.mainRoot.openDrawer(GravityCompat.START);
+            }
+        });
+
+        binding.mainRoot.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                setTransparentStatusBar(150, Color.WHITE);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
         List<SongItem> list = new ArrayList<>();
         list.add(songItem);
@@ -94,8 +120,9 @@ public class MainActivity extends BaseActivity {
                     setStatusBar();
                 }
 //                final ConstraintLayout.LayoutParams oldLayoutParam
-//                        = (ConstraintLayout.LayoutParams)binding.fragment.getLayoutParams();
+//                        = (ConstraintLayout.LayoutParams) binding.fragment.getLayoutParams();
 //                if (aBoolean) {
+//                    setStatusWithConfig(0);
 //                    ((ConstraintLayout.LayoutParams) binding.clFooter.clFooter.getLayoutParams())
 //                            .goneBottomMargin = binding.navigation.getHeight();
 //                    binding.navigation.setVisibility(View.GONE);
@@ -106,7 +133,23 @@ public class MainActivity extends BaseActivity {
 //                            binding.clFooter.clFooter.getY(),
 //                            binding.clFooter.clFooter.getY() + binding.navigation.getHeight());
 //                    animator.start();
+////                    ConstraintLayout.LayoutParams layout = new ConstraintLayout.LayoutParams(
+////                            ConstraintLayout.LayoutParams.MATCH_PARENT,
+////                            ConstraintLayout.LayoutParams.WRAP_CONTENT
+////                    );
+////                    layout = ((ConstraintLayout.LayoutParams) binding.fragment.getLayoutParams());
+//////                    layout.bottomToBottom = R.id.parent;
+//////                    layout.bottomMargin = binding.clFooter.clFooter.getHeight();
+////                    Window window = getWindow();
+////                    WindowManager windowManager = window.getWindowManager();
+////                    Display display = windowManager.getDefaultDisplay();
+////                    Point point = new Point();
+////                    display.getSize(point);
+//////                    layout.topToTop = R.id.parent;
+////                    layout.height = point.y - binding.clFooter.clFooter.getHeight();
+////                    binding.fragment.setLayoutParams(layout);
 //                } else {
+//                    setStatusBar();
 //                    ((ConstraintLayout.LayoutParams) binding.clFooter.clFooter.getLayoutParams())
 //                            .goneBottomMargin = 0;
 //                    binding.navigation.setVisibility(View.GONE);
@@ -153,10 +196,10 @@ public class MainActivity extends BaseActivity {
         return binding.navigation;
     }
 
-//    @Override
-//    public boolean onSupportNavigateUp() {
-//        Navigation.findNavController(binding.fragment).navigateUp();
-//        return super.onSupportNavigateUp();
-//    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        Navigation.findNavController(binding.fragment).navigateUp();
+        return super.onSupportNavigateUp();
+    }
 
 }

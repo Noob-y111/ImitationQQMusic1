@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imitationqqmusic.R
-import com.example.imitationqqmusic.model.SongItem
+import com.example.imitationqqmusic.model.bean.SongItem
 import kotlinx.android.synthetic.main.footer_item.view.*
 
-class FooterPagerAdapter: ListAdapter<SongItem, FooterPagerAdapter.MyHolder>(Compare) {
+class FooterPagerAdapter(private val listener: OnItemClick): ListAdapter<SongItem, FooterPagerAdapter.MyHolder>(Compare) {
 
     object Compare: DiffUtil.ItemCallback<SongItem>() {
         override fun areItemsTheSame(oldItem: SongItem, newItem: SongItem): Boolean {
@@ -22,10 +22,18 @@ class FooterPagerAdapter: ListAdapter<SongItem, FooterPagerAdapter.MyHolder>(Com
         }
     }
 
+    interface OnItemClick{
+        fun onClick(position: Int)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         LayoutInflater.from(parent.context).inflate(R.layout.footer_item, parent, false)
                 .also {
-                    return MyHolder(it)
+                    val holder = MyHolder(it)
+                    holder.itemView.setOnClickListener {
+                        listener.onClick(holder.absoluteAdapterPosition)
+                    }
+                    return holder
                 }
     }
 
