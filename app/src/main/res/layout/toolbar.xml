@@ -5,9 +5,23 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
     android:fitsSystemWindows="true"
-    app:layout_constraintTop_toTopOf="parent"
-    app:titleTextColor="#fff">
+    android:minHeight="?attr/actionBarSize"
+    app:titleTextColor="@color/blackTextColor"
+    android:clickable="true"
+    android:focusable="true"
+    app:layout_scrollFlags="scroll">
+
+    <TextView
+        android:id="@+id/tv_search"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:hint="@string/search_hint"
+        android:gravity="center"
+        android:textColorHint="@color/grayTextColor"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_edit"
+        android:clickable="true"
+        android:focusable="true"/>
 
 </androidx.appcompat.widget.Toolbar>

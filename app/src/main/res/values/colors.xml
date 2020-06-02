@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2694ab</color>
-    <color name="colorPrimaryDark">#2694ab</color>
+    <color name="colorPrimary">#57BE85</color>
+    <color name="colorPrimaryDark">#57BE85</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="toolBarTextColor">#fff</color>
     <color name="textColor">#fff</color>
@@ -9,5 +9,7 @@
     <color name="blackTextColor">#000</color>
     <color name="blackGrayTextColor">#333</color>
     <color name="grayTextColor">#aaa</color>
-    <color name="tabGrayTextColor">#888</color>
+    <color name="tabGrayTextColor">#aaa</color>
+    <color name="pressedColor">#eee</color>
+    <color name="detail_text_color">#ddd</color>
 </resources>

@@ -7,5 +7,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    
+    <style name="normal">
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_qq_music</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="detail_dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/detail_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/detail_dialog_exit</item>
+    </style>
 
 </resources>
