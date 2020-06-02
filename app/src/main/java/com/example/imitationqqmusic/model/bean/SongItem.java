@@ -1,8 +1,13 @@
 package com.example.imitationqqmusic.model.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
-public class SongItem {
+import java.util.Objects;
+
+public class SongItem implements Parcelable {
 
     private String name;
     private String singer;
@@ -12,6 +17,27 @@ public class SongItem {
     private boolean isFromInternet;
 
     public SongItem(){}
+
+    protected SongItem(Parcel in) {
+        name = in.readString();
+        singer = in.readString();
+        songMid = in.readString();
+        albumId = in.readLong();
+        albumPath = Objects.requireNonNull(in.readArray(Object.class.getClassLoader()))[0];
+        isFromInternet = in.readByte() != 0;
+    }
+
+    public static final Creator<SongItem> CREATOR = new Creator<SongItem>() {
+        @Override
+        public SongItem createFromParcel(Parcel in) {
+            return new SongItem(in);
+        }
+
+        @Override
+        public SongItem[] newArray(int size) {
+            return new SongItem[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -72,5 +98,27 @@ public class SongItem {
                 ", albumPath=" + albumPath +
                 ", isFromInternet=" + isFromInternet +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(singer);
+        dest.writeString(songMid);
+        dest.writeLong(albumId);
+        if (albumPath != null){
+            dest.writeArray(new Object[]{albumPath});
+//            if (albumPath instanceof Integer){
+//                dest.writeInt((Integer) albumPath);
+//            }else {
+//                dest.writeString((String) albumPath);
+//            }
+        }
+        dest.writeByte((byte) (isFromInternet ? 1 : 0));
     }
 }

@@ -20,6 +20,7 @@ import com.example.imitationqqmusic.adapter.SlideshowPagerAdapter;
 import com.example.imitationqqmusic.base.BaseFragment;
 import com.example.imitationqqmusic.custom.AppbarStateChangedListener;
 import com.example.imitationqqmusic.databinding.MusicFragmentBinding;
+import com.example.imitationqqmusic.view.main.MainViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ import java.util.TimerTask;
 public class MusicFragment extends BaseFragment {
 
     private MusicViewModel mViewModel;
+    private MainViewModel mainViewModel;
     private MusicFragmentBinding binding;
     private Timer timer;
     private TimerTask timerTask;
@@ -62,6 +64,7 @@ public class MusicFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.setTransparentStatusBar(150, Color.WHITE);
+        setTextViewSearchWidth(requireView());
 
         binding.appbar.addOnOffsetChangedListener(new AppbarStateChangedListener() {
             @Override
@@ -79,6 +82,7 @@ public class MusicFragment extends BaseFragment {
 
         binding.srlMusic.setColorSchemeResources(R.color.colorPrimary);
         mViewModel = new ViewModelProvider(requireActivity()).get(MusicViewModel.class);
+        mainViewModel = MainViewModel.getInstance(requireActivity(), requireActivity().getApplication());
 
         final SlideshowPagerAdapter adapter = new SlideshowPagerAdapter();
         binding.vp2Image.setAdapter(adapter);
@@ -115,7 +119,7 @@ public class MusicFragment extends BaseFragment {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
-                System.out.println("==============================state: " + state);
+//                System.out.println("==============================state: " + state);
 
                 mViewModel.setState(state);
                 if (mViewModel.position.getValue() != null && state == ViewPager2.SCROLL_STATE_IDLE) {
@@ -161,6 +165,7 @@ public class MusicFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mainViewModel.setShouldTranslate(false);
     }
 
     @Override

@@ -17,4 +17,9 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="detail_dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/detail_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/detail_dialog_exit</item>
+    </style>
+
 </resources>

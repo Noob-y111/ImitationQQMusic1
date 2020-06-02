@@ -12,8 +12,11 @@ import java.lang.Exception
 
 class GetDataModel(private val context: Context) {
 
+    //content://media/external/audio/media/ 本地音乐uri前缀
+
     companion object {
         private var model: GetDataModel? = null
+        const val uri = "content://media/external/audio/media/"
 
         fun singleTon(context: Context): GetDataModel {
             synchronized(this) {
@@ -40,13 +43,22 @@ class GetDataModel(private val context: Context) {
                             val song = SongItem()
                             song.name = it.getString(it.getColumnIndex(MediaStore.Audio.Media.TITLE))
                             song.singer = it.getString(it.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                            if (song.singer == "<unknown>"){
+                                song.singer = "未知艺术家"
+                            }
+                            song.isFromInternet = false
                             song.songMid = it.getString(it.getColumnIndex(MediaStore.Audio.Media._ID))
                             song.albumId = it.getLong(it.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
+                            getAlbumPath(song)
                             songList.add(song)
                         }
+                        if (songList.size == 0){
+                            albumPath.postValue(R.drawable.default_image)
+                        }else{
+                            getAlbumPath(songList.random(), albumPath)
+                        }
+                        Thread.sleep(300)
                         list.postValue(songList)
-//                        albumPath.postValue(R.drawable.default_image)
-                        getAlbumPath(songList[0], albumPath)
                     }
                 }
             } catch (e: Exception) {
@@ -71,15 +83,10 @@ class GetDataModel(private val context: Context) {
                                 null, null, null
                         )
                         albumCursor?.run {
-                            println("=========================run")
-                            println("================count: $count")
-                            println("================columnCount: $columnCount")
-
                             var path: Any? = null
 
                             if (count > 0 && columnCount > 0) {
                                 moveToNext()
-                                println("================getString(): ${getString(0)}")
                                 path = getString(0)
                             }
 
@@ -87,14 +94,11 @@ class GetDataModel(private val context: Context) {
                                 path = R.drawable.default_image
                             }
 
-                            if (albumPath.isEmpty()) {
-                                song.albumPath = path
-                            } else {
+                            song.albumPath = path
+                            if (albumPath.isNotEmpty()) {
                                 albumPath[0].postValue(path)
                             }
-                            println("================path: $path")
                         }
-                        println("================song: $song")
                         albumCursor?.close()
                     }
 
@@ -105,6 +109,12 @@ class GetDataModel(private val context: Context) {
             } catch (e: Exception) {
 
             }
+        }).start()
+    }
+
+    fun getPlayPath(song: SongItem){
+        Thread(Runnable {
+
         }).start()
     }
 

@@ -8,13 +8,11 @@
 
     <CheckBox
         android:id="@+id/list_checkbox"
-        android:layout_width="8dp"
+        android:layout_width="5dp"
         android:layout_height="match_parent"
         android:enabled="false"
         android:background="@drawable/check_box_selector"
-        android:button="@null"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"/>
+        android:button="@null"/>
 
     <LinearLayout
         android:orientation="vertical"

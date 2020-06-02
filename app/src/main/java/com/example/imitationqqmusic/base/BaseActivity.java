@@ -73,4 +73,18 @@ public abstract class BaseActivity extends AppCompatActivity {
                         Color.blue(color))
         );
     }
+
+    final public int getStatusBarHeight(){
+        int resourceId = this
+                .getApplicationContext()
+                .getResources()
+                .getIdentifier("status_bar_height", "dimen", "android");
+        int height = 0;
+        if (resourceId > 0){
+            height = this.getApplicationContext().getResources().getDimensionPixelSize(resourceId);
+        }else {
+            height = 63;
+        }
+        return height;
+    }
 }

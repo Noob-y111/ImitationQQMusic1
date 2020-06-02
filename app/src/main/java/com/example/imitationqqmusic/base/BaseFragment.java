@@ -1,32 +1,25 @@
 package com.example.imitationqqmusic.base;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
 import com.example.imitationqqmusic.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.imitationqqmusic.model.tools.ScreenUtils;
 
 abstract public class BaseFragment extends Fragment {
 
     protected Toolbar toolbar;
+    protected TextView textView;
 
     @Nullable
     @Override
@@ -68,6 +61,18 @@ abstract public class BaseFragment extends Fragment {
             height = 63;
         }
         return height;
+    }
+
+    protected void setTextViewSearchWidth(View view){
+        textView = view.findViewById(R.id.tv_search);
+        if (textView == null) return;
+        textView.getLayoutParams().width = (int) (ScreenUtils.Companion.getWidth(requireActivity()) * 0.4);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void setToolbar(){

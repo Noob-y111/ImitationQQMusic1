@@ -11,10 +11,12 @@ import android.view.View;
 import com.example.imitationqqmusic.R;
 import com.example.imitationqqmusic.base.BaseFragment;
 import com.example.imitationqqmusic.databinding.RecommendedFragmentBinding;
+import com.example.imitationqqmusic.view.main.MainViewModel;
 
 public class RecommendedFragment extends BaseFragment {
 
     private RecommendedViewModel mViewModel;
+    private MainViewModel mainViewModel;
     private RecommendedFragmentBinding binding;
 
     public static RecommendedFragment newInstance() {
@@ -37,6 +39,8 @@ public class RecommendedFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.setTransparentStatusBar(150, Color.WHITE);
+        setTextViewSearchWidth(requireView());
+        mainViewModel = MainViewModel.getInstance(requireActivity(), requireActivity().getApplication());
     }
 
     @Override
@@ -59,5 +63,6 @@ public class RecommendedFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mainViewModel.setShouldTranslate(false);
     }
 }

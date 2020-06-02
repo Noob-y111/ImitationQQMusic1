@@ -16,7 +16,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="q">
-        <activity android:name=".view.splash.SplashActivity"
+        <activity android:name=".view.detail.DetailActivity"></activity>
+
+        <service
+            android:name=".service.MusicService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".view.splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.main.MainActivity"/>
+        <activity
+            android:name=".view.main.MainActivity"
+            android:screenOrientation="locked" />
     </application>
 
 </manifest>

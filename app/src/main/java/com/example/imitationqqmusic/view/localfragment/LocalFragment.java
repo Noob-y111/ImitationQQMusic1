@@ -26,6 +26,7 @@ import com.example.imitationqqmusic.model.bean.SongItem;
 import com.example.imitationqqmusic.view.main.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LocalFragment extends BaseFragment {
 
@@ -52,6 +53,7 @@ public class LocalFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        setTextViewSearchWidth(requireView());
         mainViewModel = MainViewModel
                 .getInstance(requireActivity(), requireActivity().getApplication());
         viewModel = new ViewModelProvider(requireActivity()).get(LocalViewModel.class);
@@ -59,7 +61,12 @@ public class LocalFragment extends BaseFragment {
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerview.setItemAnimator(new DefaultItemAnimator());
         binding.recyclerview.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-        final MusicListAdapter adapter = new MusicListAdapter();
+        final MusicListAdapter adapter = new MusicListAdapter(new MusicListAdapter.OnListItemClickListener() {
+            @Override
+            public void onListItemClick(int position) {
+
+            }
+        });
         binding.recyclerview.setAdapter(adapter);
 
         viewModel.list.observe(getViewLifecycleOwner(), new Observer<ArrayList<SongItem>>() {
@@ -154,7 +161,7 @@ public class LocalFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("==============================onResume: ");
+        mainViewModel.setShouldTranslate(false);
 
 //        if (mainViewModel != null){
 //            mainViewModel.setShouldTranslate(false);

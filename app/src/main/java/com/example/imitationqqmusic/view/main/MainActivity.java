@@ -1,13 +1,10 @@
 package com.example.imitationqqmusic.view.main;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
-import androidx.navigation.Navigation;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.imitationqqmusic.R;
@@ -15,15 +12,19 @@ import com.example.imitationqqmusic.adapter.FooterPagerAdapter;
 import com.example.imitationqqmusic.base.BaseActivity;
 import com.example.imitationqqmusic.databinding.ActivityMainBinding;
 import com.example.imitationqqmusic.model.bean.SongItem;
+import com.example.imitationqqmusic.service.Connection;
+import com.example.imitationqqmusic.service.MusicService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;
     private MainViewModel viewModel;
+    private Connection connection = new Connection();
 
     @Override
     protected View setRootViewByBinding() {
@@ -33,53 +34,29 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        Intent intent = new Intent(this, MusicService.class);
+        startService(intent);
+        System.out.println("==============================bindService(intent, connection, Context.BIND_AUTO_CREATE): " + bindService(intent, connection, Context.BIND_AUTO_CREATE));
+
         viewModel = MainViewModel.getInstance(this, getApplication());
-        SongItem songItem = new SongItem();
-        songItem.setName("我爱你1");
-        songItem.setSinger("你是谁1");
-        SongItem songItem1 = new SongItem();
-        songItem1.setName("我爱你2");
-        songItem1.setSinger("你是谁2");
-        SongItem songItem2 = new SongItem();
-        songItem2.setName("我爱你3");
-        songItem2.setSinger("你是谁3");
+//        final SongItem songItem = new SongItem();
+//        songItem.setName("我爱你1");
+//        songItem.setSinger("你是谁1");
+//        SongItem songItem1 = new SongItem();
+//        songItem1.setName("我爱你2");
+//        songItem1.setSinger("你是谁2");
+//        SongItem songItem2 = new SongItem();
+//        songItem2.setName("我爱你3");
+//        songItem2.setSinger("你是谁3");
 
         final FooterPagerAdapter adapter = new FooterPagerAdapter(new FooterPagerAdapter.OnItemClick() {
             @Override
             public void onClick(int position) {
-                binding.mainRoot.openDrawer(GravityCompat.START);
-            }
-        });
-
-        binding.mainRoot.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            }
-
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
 
             }
+        }, getSupportFragmentManager());
 
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-                setTransparentStatusBar(150, Color.WHITE);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
-
-        List<SongItem> list = new ArrayList<>();
-        list.add(songItem);
-        list.add(songItem1);
-        list.add(songItem2);
         binding.clFooter.pager2Footer.setAdapter(adapter);
-        adapter.submitList(list);
-        binding.clFooter.pager2Footer.setCurrentItem(1, false);
         binding.clFooter.pager2Footer.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
             @Override
@@ -95,6 +72,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
+                System.out.println("==============================onPageScrollStateChanged: " + "onPageScrollStateChanged");
                 if (state == ViewPager2.SCROLL_STATE_IDLE) {
                     int position = viewModel.getPosition();
                     if (position == adapter.getItemCount() - 1) {
@@ -108,82 +86,41 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        viewModel.currentSong.observe(this, new Observer<HashMap<String, Object>>() {
+            @Override
+            public void onChanged(HashMap<String, Object> map) {
+                ArrayList<SongItem> songItems = (ArrayList<SongItem>) map.get("list");
+                adapter.submitList(songItems);
+                int position = (Integer) map.get("position") + 1;
+                System.out.println("==============================position: " + position);
+                System.out.println("==============================adapter.getItemCount(): " + adapter.getItemCount());
+                binding.clFooter.pager2Footer.setCurrentItem( position, false);
+            }
+        });
+
         viewModel.shouldTranslate.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 System.out.println("==============================aBoolean:" + aBoolean);
                 if (aBoolean){
-                    binding.navigation.setVisibility(View.GONE);
-                    setStatusWithConfig(0);
+                    if (binding.navigation.getVisibility() != View.GONE){
+                        binding.navigation.setVisibility(View.GONE);
+                        setStatusWithConfig(0);
+                    }
                 }else {
-                    binding.navigation.setVisibility(View.VISIBLE);
-                    setStatusBar();
+                    if (binding.navigation.getVisibility() != View.VISIBLE) {
+                        binding.navigation.setVisibility(View.VISIBLE);
+                        setStatusBar();
+                    }
                 }
-//                final ConstraintLayout.LayoutParams oldLayoutParam
-//                        = (ConstraintLayout.LayoutParams) binding.fragment.getLayoutParams();
-//                if (aBoolean) {
-//                    setStatusWithConfig(0);
-//                    ((ConstraintLayout.LayoutParams) binding.clFooter.clFooter.getLayoutParams())
-//                            .goneBottomMargin = binding.navigation.getHeight();
-//                    binding.navigation.setVisibility(View.GONE);
-//
-//                    ObjectAnimator animator = ObjectAnimator.ofFloat(
-//                            binding.clFooter.clFooter,
-//                            "y",
-//                            binding.clFooter.clFooter.getY(),
-//                            binding.clFooter.clFooter.getY() + binding.navigation.getHeight());
-//                    animator.start();
-////                    ConstraintLayout.LayoutParams layout = new ConstraintLayout.LayoutParams(
-////                            ConstraintLayout.LayoutParams.MATCH_PARENT,
-////                            ConstraintLayout.LayoutParams.WRAP_CONTENT
-////                    );
-////                    layout = ((ConstraintLayout.LayoutParams) binding.fragment.getLayoutParams());
-//////                    layout.bottomToBottom = R.id.parent;
-//////                    layout.bottomMargin = binding.clFooter.clFooter.getHeight();
-////                    Window window = getWindow();
-////                    WindowManager windowManager = window.getWindowManager();
-////                    Display display = windowManager.getDefaultDisplay();
-////                    Point point = new Point();
-////                    display.getSize(point);
-//////                    layout.topToTop = R.id.parent;
-////                    layout.height = point.y - binding.clFooter.clFooter.getHeight();
-////                    binding.fragment.setLayoutParams(layout);
-//                } else {
-//                    setStatusBar();
-//                    ((ConstraintLayout.LayoutParams) binding.clFooter.clFooter.getLayoutParams())
-//                            .goneBottomMargin = 0;
-//                    binding.navigation.setVisibility(View.GONE);
-//                    ObjectAnimator animator = ObjectAnimator.ofFloat(
-//                            binding.clFooter.clFooter,
-//                            "y",
-//                            binding.clFooter.clFooter.getY(),
-//                            binding.clFooter.clFooter.getY() - binding.navigation.getHeight());
-//                    animator.addListener(new Animator.AnimatorListener() {
-//                        @Override
-//                        public void onAnimationStart(Animator animation) {
-//                            binding.navigation.setVisibility(View.INVISIBLE);
-//                            binding.fragment.setLayoutParams(oldLayoutParam);
-//                        }
-//
-//                        @Override
-//                        public void onAnimationEnd(Animator animation) {
-//                            binding.navigation.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        @Override
-//                        public void onAnimationCancel(Animator animation) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onAnimationRepeat(Animator animation) {
-//
-//                        }
-//                    });
-//                    animator.start();
-//                }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
     }
 
     @Override
@@ -197,9 +134,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        Navigation.findNavController(binding.fragment).navigateUp();
-        return super.onSupportNavigateUp();
+    public void onBackPressed() {
+        super.onBackPressed();
     }
-
 }

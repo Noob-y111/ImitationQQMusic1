@@ -12,9 +12,7 @@ class MusicListViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val model = GetDataModel.singleTon(application)
 
-    private var _list: MutableLiveData<ArrayList<SongItem>> = MutableLiveData<ArrayList<SongItem>>().also{
-        it.value = ArrayList()
-    }
+    private var _list: MutableLiveData<ArrayList<SongItem>> = MutableLiveData<ArrayList<SongItem>>()
     val list: LiveData<ArrayList<SongItem>> = _list
 
     private var _state = MutableLiveData<AppbarStateChangedListener.State>()
