@@ -45,12 +45,12 @@ class FooterPagerAdapter(private val listener: OnItemClick, private val fragment
                     holder.itemView.setOnClickListener {
                         val songItem = getItem(holder.absoluteAdapterPosition - 1)
                         val musicDetail = MusicDetail(songItem)
-//                        musicDetail.show()
+                        musicDetail.show(fragmentManager, null)
 //                        println("================songItem: $songItem")
 //                        Intent(holder.itemView.context, DetailActivity::class.java).apply {
 //                            putParcelableArrayListExtra("song", ArrayList(arrayOf(songItem).toList()))
 //                            holder.itemView.context.startActivity(this)
-////                            overridePendingTransition()
+//                            overridePendingTransition()
 //
 //                        }
                     }
