@@ -3,6 +3,7 @@ package com.example.imitationqqmusic.adapter
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Build
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,17 +70,11 @@ class MusicListAdapter(private val listener: OnListItemClickListener) : ListAdap
             else -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.music_list_item, parent, false)
                 holder = NormalHolder(view)
+
                 holder.itemView.setOnClickListener {
                     val holderIndex = holder.absoluteAdapterPosition
                     listener.onListItemClick(holderIndex - 1)
-                    if (checkedIndex == holderIndex)
-                        return@setOnClickListener
-
-                    if (checkedIndex != -1)
-                        notifyItemChanged(checkedIndex)
-
-                    this.checkedIndex = holderIndex
-                    notifyItemChanged(holderIndex)
+                    setCheckedIndex(holderIndex)
                 }
             }
         }
@@ -117,5 +112,16 @@ class MusicListAdapter(private val listener: OnListItemClickListener) : ListAdap
                 }
             }
         }
+    }
+
+    fun setCheckedIndex(position: Int){
+        if (checkedIndex == position)
+            return
+
+        if (checkedIndex != -1)
+            notifyItemChanged(checkedIndex)
+
+        this.checkedIndex = position
+        notifyItemChanged(position)
     }
 }

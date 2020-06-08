@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Adapter
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.iterator
@@ -15,6 +16,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -22,9 +24,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.imitationqqmusic.R
 import com.example.imitationqqmusic.adapter.MusicListAdapter
+import com.example.imitationqqmusic.adapter.RecyclerSimpleAdapter
 import com.example.imitationqqmusic.base.BaseFragment
 import com.example.imitationqqmusic.custom.AppbarStateChangedListener
 import com.example.imitationqqmusic.databinding.MusicListFragmentBinding
+import com.example.imitationqqmusic.model.GetDataModel
 import com.example.imitationqqmusic.model.bean.SongItem
 import com.example.imitationqqmusic.model.tools.ScreenUtils
 import com.example.imitationqqmusic.service.Connection
@@ -45,6 +49,7 @@ class MusicListFragment : BaseFragment() {
 
     @SuppressLint("ResourceAsColor")
     override fun initView() {
+        setStatusWithConfig(0)
         super.setTransparentStatusBar(0, Color.TRANSPARENT)
         binding.ivHeader.layoutParams.height = (ScreenUtils.getHeight(requireActivity()) * 0.4f).toInt()
 
@@ -53,7 +58,44 @@ class MusicListFragment : BaseFragment() {
                 ViewModelProvider.AndroidViewModelFactory(requireActivity().application))
                 .get(MusicListViewModel::class.java)
 
-        binding.testToolbar.title = arguments?.getString("kind", "音乐列表")
+        viewModel.kind.observe(viewLifecycleOwner, Observer {
+//            when (it) {
+//                "经典老歌榜" -> {
+//
+//                }
+//                "热歌榜" -> {
+//
+//                }
+//                "新歌榜" -> {
+//
+//                }
+//                "情歌对唱榜" -> {
+//
+//                }
+//                "欧美金曲榜" -> {
+//
+//                }
+//                "网络歌曲榜" -> {
+//
+//                }
+//                "影视金曲榜" -> {
+//
+//                }
+//            }
+        })
+
+        var title: String = "音乐列表"
+        var type = -1
+        var path: Any? = R.drawable.default_image
+        var apiKind: Int = -1
+        arguments?.let {
+            title = it.getString("title")!!
+            type = it.getInt("type")
+            path = it.getString("imagePath")
+            apiKind = it.getInt("apiKind")
+        }
+
+        binding.testToolbar.title = title
         binding.testToolbar.setNavigationIcon(R.drawable.back)
         binding.testToolbar.setNavigationOnClickListener {
             Navigation.findNavController(requireActivity(), R.id.fragment).navigateUp()
@@ -66,7 +108,6 @@ class MusicListFragment : BaseFragment() {
                     list = it
                 }
                 if (list.size == 0) return
-                Connection.player?.startMusic(list[position])
                 val map = HashMap<String, Any>()
                 map["list"] = list
                 map["position"] = position
@@ -77,11 +118,12 @@ class MusicListFragment : BaseFragment() {
         val layout = binding.appbar.getChildAt(0).layoutParams as AppBarLayout.LayoutParams
         layout.scrollFlags = 0
         viewModel.list.observe(viewLifecycleOwner, Observer {
-            listAdapter.submitList(it)
-            val flag = AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED or AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-            layout.scrollFlags = flag
-            binding.appbar.getChildAt(0).layoutParams = layout
-            binding.pbListOnLoad.visibility = View.GONE
+            listAdapter.submitList(it) {
+                val flag = AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED or AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                layout.scrollFlags = flag
+                binding.appbar.getChildAt(0).layoutParams = layout
+                binding.pbListOnLoad.visibility = View.GONE
+            }
         })
 
         binding.recyclerview.apply {
@@ -92,7 +134,9 @@ class MusicListFragment : BaseFragment() {
         }
 
         binding.pbListOnLoad.visibility = View.VISIBLE
-        viewModel.getSongList()
+
+        //todo
+        viewModel.getData(type, path, apiKind)
 
         viewModel.state.observe(viewLifecycleOwner, Observer {
             if (it == AppbarStateChangedListener.State.COLLAPSED) {
@@ -168,10 +212,6 @@ class MusicListFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun toMusicDetail(bundle: Bundle) {
-
-    }
-
     override fun onCreateOptionMenuOnToolBar(toolbar: Toolbar?) {
         super.onCreateOptionMenuOnToolBar(toolbar)
         toolbar?.inflateMenu(R.menu.default_white_more)
@@ -184,8 +224,13 @@ class MusicListFragment : BaseFragment() {
 
     override fun getTitle() = "音乐列表"
 
-    override fun onPause() {
-        super.onPause()
+//    override fun onPause() {
+//        super.onPause()
+//    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        setStatusBar()
     }
 
 }

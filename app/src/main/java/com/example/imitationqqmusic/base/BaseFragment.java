@@ -42,12 +42,29 @@ abstract public class BaseFragment extends Fragment {
     @NonNull
     abstract protected View setRootView();
     abstract protected void initView();
-    protected void toMusicDetail(@NonNull Bundle bundle){
+    protected void toMusicList(@NonNull Bundle bundle){
 
     }
     abstract protected int getToolBarId();
     @NonNull
     abstract protected String getTitle();
+
+    protected void setStatusBar(){
+        setStatusWithConfig(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
+    protected void setStatusWithConfig(int config){
+        int localConfig = localConfig = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            localConfig = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                    config;
+        }
+        View view = requireActivity().getWindow().getDecorView();
+        view.setSystemUiVisibility(localConfig);
+        view.setFitsSystemWindows(true);
+    }
 
     final protected int getStatusBarHeight(){
         int resourceId = requireActivity()

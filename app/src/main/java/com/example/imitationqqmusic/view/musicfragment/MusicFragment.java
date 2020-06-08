@@ -9,6 +9,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
@@ -16,10 +19,13 @@ import android.os.Message;
 import android.view.View;
 
 import com.example.imitationqqmusic.R;
+import com.example.imitationqqmusic.adapter.MusicFragmentAdapter;
 import com.example.imitationqqmusic.adapter.SlideshowPagerAdapter;
 import com.example.imitationqqmusic.base.BaseFragment;
 import com.example.imitationqqmusic.custom.AppbarStateChangedListener;
 import com.example.imitationqqmusic.databinding.MusicFragmentBinding;
+import com.example.imitationqqmusic.model.bean.MusicFragmentData;
+import com.example.imitationqqmusic.model.tools.ScreenUtils;
 import com.example.imitationqqmusic.view.main.MainViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -38,6 +44,7 @@ public class MusicFragment extends BaseFragment {
     private MusicFragmentBinding binding;
     private Timer timer;
     private TimerTask timerTask;
+    private NavController navController;
 
     public static MusicFragment newInstance() {
         return new MusicFragment();
@@ -65,7 +72,7 @@ public class MusicFragment extends BaseFragment {
     protected void initView() {
         super.setTransparentStatusBar(150, Color.WHITE);
         setTextViewSearchWidth(requireView());
-
+        navController = Navigation.findNavController(requireActivity(), R.id.fragment);
         binding.appbar.addOnOffsetChangedListener(new AppbarStateChangedListener() {
             @Override
             public void onStateChanged(@Nullable AppBarLayout appbar, @NotNull State state) {
@@ -130,6 +137,60 @@ public class MusicFragment extends BaseFragment {
             }
         });
 
+        binding.card1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_musicFragment_to_singerFragment);
+                mainViewModel.setShouldTranslate(true);
+            }
+        });
+
+        binding.card2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", 1);
+                bundle.putString("title", "排行榜");
+                navController.navigate(R.id.action_musicFragment_to_rankFragment, bundle);
+                mainViewModel.setShouldTranslate(true);
+            }
+        });
+
+        binding.card3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", 2);
+                bundle.putString("title", "歌单");
+                navController.navigate(R.id.action_musicFragment_to_rankFragment, bundle);
+                mainViewModel.setShouldTranslate(true);
+            }
+        });
+
+//        binding.recyclerMusicFragment.setLayoutManager(new GridLayoutManager(requireContext(), 3));
+//        final MusicFragmentAdapter adapter1 = new MusicFragmentAdapter(
+//                ScreenUtils.Companion.getWidth(requireActivity()),
+//                requireContext(),
+//                new MusicFragmentAdapter.OnItemClick() {
+//                    @Override
+//                    public void onClick(@NotNull MusicFragmentData item) {
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("kind", item.getName());
+//                        toMusicList(bundle);
+//                    }
+//                });
+//        binding.recyclerMusicFragment.setAdapter(adapter1);
+//
+//        mViewModel.list.observe(getViewLifecycleOwner(), new Observer<ArrayList<MusicFragmentData>>() {
+//            @Override
+//            public void onChanged(ArrayList<MusicFragmentData> musicFragmentData) {
+//                adapter1.submitList(musicFragmentData);
+//            }
+//        });
+
+//        if (mViewModel.list.getValue() == null)
+//            mViewModel.getList(requireContext());
+
         mViewModel.position.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -152,7 +213,7 @@ public class MusicFragment extends BaseFragment {
     }
 
     @Override
-    protected void toMusicDetail(@NonNull Bundle bundle) {
+    protected void toMusicList(@NonNull Bundle bundle) {
 
     }
 
