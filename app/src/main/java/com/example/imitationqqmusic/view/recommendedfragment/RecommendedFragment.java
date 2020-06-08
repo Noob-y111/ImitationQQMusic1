@@ -44,11 +44,6 @@ public class RecommendedFragment extends BaseFragment {
     }
 
     @Override
-    protected void toMusicDetail(@NonNull Bundle bundle) {
-
-    }
-
-    @Override
     protected void onCreateOptionMenuOnToolBar(Toolbar toolbar) {
         super.onCreateOptionMenuOnToolBar(toolbar);
         toolbar.inflateMenu(R.menu.default_black_more);

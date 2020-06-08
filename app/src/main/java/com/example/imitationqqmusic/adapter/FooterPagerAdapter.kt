@@ -1,5 +1,6 @@
 package com.example.imitationqqmusic.adapter
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -50,8 +51,7 @@ class FooterPagerAdapter(private val listener: OnItemClick, private val fragment
 //                        Intent(holder.itemView.context, DetailActivity::class.java).apply {
 //                            putParcelableArrayListExtra("song", ArrayList(arrayOf(songItem).toList()))
 //                            holder.itemView.context.startActivity(this)
-//                            overridePendingTransition()
-//
+//                            (holder.itemView.context as Activity).overridePendingTransition(R.anim.detail_dialog_enter, R.anim.no_animation)
 //                        }
                     }
                     return holder
@@ -70,11 +70,16 @@ class FooterPagerAdapter(private val listener: OnItemClick, private val fragment
             tv_music_name.text = item.name
             tv_singer.text = item.singer
             if (item.isFromInternet){
-
+                Glide.with(this)
+                        .load(item.albumPath)
+                        .placeholder(R.drawable.shimmer_bg)
+                        .error(R.drawable.shimmer_bg)
+                        .into(music_image)
             }else{
                 Glide.with(this)
                         .load(item.albumPath)
-                        .placeholder(R.drawable.default_image)
+                        .placeholder(R.drawable.shimmer_bg)
+                        .error(R.drawable.shimmer_bg)
                         .into(music_image)
             }
         }

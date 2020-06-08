@@ -22,7 +22,22 @@
         android:id="@+id/musicFragment"
         android:name="com.example.imitationqqmusic.view.musicfragment.MusicFragment"
         android:label="音乐馆"
-        tools:layout="@layout/music_fragment" />
+        tools:layout="@layout/music_fragment" >
+        <action
+            android:id="@+id/action_musicFragment_to_rankFragment"
+            app:destination="@id/rankFragment"
+            app:enterAnim="@anim/new_activity_enter"
+            app:exitAnim="@anim/new_activity_exit"
+            app:popEnterAnim="@anim/old_activity_exit"
+            app:popExitAnim="@anim/old_activity_enter" />
+        <action
+            android:id="@+id/action_musicFragment_to_singerFragment"
+            app:destination="@id/singerFragment"
+            app:enterAnim="@anim/new_activity_enter"
+            app:exitAnim="@anim/new_activity_exit"
+            app:popEnterAnim="@anim/old_activity_exit"
+            app:popExitAnim="@anim/old_activity_enter" />
+    </fragment>
     <fragment
         android:id="@+id/recommendedFragment"
         android:name="com.example.imitationqqmusic.view.recommendedfragment.RecommendedFragment"
@@ -33,4 +48,30 @@
         android:name="com.example.imitationqqmusic.view.listfragment.MusicListFragment"
         android:label="music_list_fragment"
         tools:layout="@layout/music_list_fragment" />
+    <fragment
+        android:id="@+id/rankFragment"
+        android:name="com.example.imitationqqmusic.view.rankfragment.RankFragment"
+        android:label="rank_fragment"
+        tools:layout="@layout/rank_fragment" >
+        <action
+            android:id="@+id/action_rankFragment_to_musicListFragment"
+            app:destination="@id/musicListFragment"
+            app:enterAnim="@anim/new_activity_enter"
+            app:exitAnim="@anim/new_activity_exit"
+            app:popEnterAnim="@anim/old_activity_exit"
+            app:popExitAnim="@anim/old_activity_enter" />
+    </fragment>
+    <fragment
+        android:id="@+id/singerFragment"
+        android:name="com.example.imitationqqmusic.view.singer.SingerFragment"
+        android:label="singer_fragment"
+        tools:layout="@layout/singer_fragment" >
+        <action
+            android:id="@+id/action_singerFragment_to_musicListFragment"
+            app:destination="@id/musicListFragment"
+            app:enterAnim="@anim/new_activity_enter"
+            app:exitAnim="@anim/new_activity_exit"
+            app:popEnterAnim="@anim/old_activity_exit"
+            app:popExitAnim="@anim/old_activity_enter" />
+    </fragment>
 </navigation>

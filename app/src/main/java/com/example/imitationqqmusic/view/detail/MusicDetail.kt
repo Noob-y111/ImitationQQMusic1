@@ -65,6 +65,7 @@ class MusicDetail(private val songItem: SongItem): DialogFragment() {
                     .from(it)
                     .into(binding.ivBackground)
         })
+
         viewModel.changeSong(songItem)
 
         binding.detailToolbar.setNavigationIcon(R.drawable.close)

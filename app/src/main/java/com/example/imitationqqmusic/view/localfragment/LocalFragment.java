@@ -26,7 +26,6 @@ import com.example.imitationqqmusic.model.bean.SongItem;
 import com.example.imitationqqmusic.view.main.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class LocalFragment extends BaseFragment {
 
@@ -82,8 +81,9 @@ public class LocalFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("kind", "本地音乐");
-                toMusicDetail(bundle);
+                bundle.putString("title", "本地音乐");
+                bundle.putInt("type", -1);
+                toMusicList(bundle);
             }
         });
 
@@ -116,7 +116,7 @@ public class LocalFragment extends BaseFragment {
     }
 
     @Override
-    protected void toMusicDetail(@NonNull Bundle bundle) {
+    protected void toMusicList(@NonNull Bundle bundle) {
         navController.navigate(R.id.action_localFragment_to_musicListFragment, bundle);
         mainViewModel.setShouldTranslate(true);
     }

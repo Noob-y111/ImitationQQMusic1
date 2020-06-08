@@ -5,16 +5,33 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.example.imitationqqmusic.model.GetDataModel;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Objects;
 
 public class SongItem implements Parcelable {
 
+    @SerializedName(value = "songName", alternate = {"title"})
     private String name;
+
+    @SerializedName(value = "singer", alternate = {"artist_name"})
     private String singer;
+
+    @SerializedName(value = "songMid", alternate = {"song_id"})
     private String songMid;
+
+    @SerializedName(value = "album", alternate = {"album_id"})
     private long albumId;
+
+    @SerializedName(value = "albumPath", alternate = {"pic_huge"})
     private Object albumPath;
+
     private boolean isFromInternet;
+
+    private GetDataModel.ApiKind kind;
+
+    private String path;
 
     public SongItem(){}
 
@@ -87,7 +104,22 @@ public class SongItem implements Parcelable {
         isFromInternet = fromInternet;
     }
 
-    @NonNull
+    public GetDataModel.ApiKind getKind() {
+        return kind;
+    }
+
+    public void setKind(GetDataModel.ApiKind kind) {
+        this.kind = kind;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     public String toString() {
         return "SongItem{" +
@@ -97,6 +129,8 @@ public class SongItem implements Parcelable {
                 ", albumId=" + albumId +
                 ", albumPath=" + albumPath +
                 ", isFromInternet=" + isFromInternet +
+                ", kind=" + kind +
+                ", path='" + path + '\'' +
                 '}';
     }
 
@@ -122,3 +156,4 @@ public class SongItem implements Parcelable {
         dest.writeByte((byte) (isFromInternet ? 1 : 0));
     }
 }
+
