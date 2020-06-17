@@ -65,6 +65,7 @@ class RankFragment : BaseFragment() {
             binding.refresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
         }
 
+        binding.refresh.setProgressViewOffset(true, 0, (ScreenUtils.getHeight(requireActivity()) * 0.09).toInt())
         binding.refresh.setOnRefreshListener {
             viewModel.isFromUser = true
             viewModel.getData(requireContext())

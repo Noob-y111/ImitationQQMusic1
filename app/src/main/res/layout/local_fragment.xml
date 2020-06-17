@@ -89,6 +89,7 @@
                 app:cardElevation="0.5dp">
 
                 <LinearLayout
+                    android:id="@+id/linear_user"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">

@@ -2,6 +2,7 @@ package com.example.imitationqqmusic.view.listfragment
 
 import android.app.Application
 import android.app.Service
+import android.os.Handler
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,8 +10,6 @@ import com.example.imitationqqmusic.R
 import com.example.imitationqqmusic.custom.AppbarStateChangedListener
 import com.example.imitationqqmusic.model.GetDataModel
 import com.example.imitationqqmusic.model.bean.SongItem
-import com.example.imitationqqmusic.service.Connection
-import com.example.imitationqqmusic.service.MusicService
 
 class MusicListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,6 +20,19 @@ class MusicListViewModel(application: Application) : AndroidViewModel(applicatio
 
     private var _state = MutableLiveData<AppbarStateChangedListener.State>()
     val state: LiveData<AppbarStateChangedListener.State> = _state
+
+    private var _floatingDisplay = MutableLiveData<Boolean>().also {
+        it.value = false
+    }
+    val floatingDisplay: LiveData<Boolean> = _floatingDisplay
+
+    fun changeDisplayEnable(){
+        _floatingDisplay.postValue(true)
+//        Handler().postDelayed(Runnable {
+//            if (_floatingDisplay.value == false) return@Runnable
+//            _floatingDisplay.postValue(false)
+//        }, 2000)
+    }
 
     var titleColor: Int? = -1
     var alpha: Int = 0
@@ -35,7 +47,7 @@ class MusicListViewModel(application: Application) : AndroidViewModel(applicatio
         _kind.postValue(kind)
     }
 
-    fun changeFirstAlbumPath(path: Any){
+    private fun changeFirstAlbumPath(path: Any){
         _firstAlbumPath.postValue(path)
     }
 
@@ -78,39 +90,17 @@ class MusicListViewModel(application: Application) : AndroidViewModel(applicatio
                         changeFirstAlbumPath(url)
                     }
                 }
+
+                4 -> {
+                    model.getListByAlbumId(type, _list)
+                    if (url == null){
+                        changeFirstAlbumPath(R.drawable.default_image)
+                    }else{
+                        changeFirstAlbumPath(url)
+                    }
+                }
             }
         }
-//        if (apiKind == 1){
-//            when(type){
-//                in GetDataModel.type -> {
-//                    model.getRankList(type, _list)
-//                    if (url == null){
-//                        changeFirstAlbumPath(R.drawable.default_image)
-//                    }else{
-//                        changeFirstAlbumPath(url)
-//                    }
-//                }
-//
-//                -1 -> {
-//                    getSongList()
-//                }
-//            }
-//        }else{
-//            when(type){
-//                in GetDataModel.topId[0]..GetDataModel.topId[1] -> {
-//                    model.getSongList(type, _list)
-//                    if (url == null){
-//                        changeFirstAlbumPath(R.drawable.default_image)
-//                    }else{
-//                        changeFirstAlbumPath(url)
-//                    }
-//                }
-//
-//                -1 -> {
-//                    getSongList()
-//                }
-//            }
-//        }
     }
 
 //    fun getPlayPath(songItem: SongItem, player: MusicService.MyBinder){

@@ -18,11 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.imitationqqmusic.R;
 import com.example.imitationqqmusic.adapter.MusicListAdapter;
 import com.example.imitationqqmusic.base.BaseFragment;
 import com.example.imitationqqmusic.databinding.LocalFragmentBinding;
 import com.example.imitationqqmusic.model.bean.SongItem;
+import com.example.imitationqqmusic.model.room_bean.User;
 import com.example.imitationqqmusic.view.main.MainViewModel;
 
 import java.util.ArrayList;
@@ -68,6 +70,28 @@ public class LocalFragment extends BaseFragment {
         });
         binding.recyclerview.setAdapter(adapter);
 
+        mainViewModel.loginUser.observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                binding.tvUserName
+                        .setText(
+                                user.getName() == null ? getString(R.string.default_user_name) : user.getName());
+
+                Object path;
+                if (user.getUserHead() == null) {
+                    path = R.drawable.default_image;
+                } else {
+                    path = user.getUserHead();
+                }
+
+                Glide.with(requireActivity())
+                        .load(path)
+                        .placeholder(R.drawable.shimmer_bg)
+                        .error(R.drawable.shimmer_bg)
+                        .into(binding.ivUserHead);
+            }
+        });
+
         viewModel.list.observe(getViewLifecycleOwner(), new Observer<ArrayList<SongItem>>() {
             @Override
             public void onChanged(ArrayList<SongItem> SongItems) {
@@ -100,6 +124,15 @@ public class LocalFragment extends BaseFragment {
 
             }
         });
+
+        binding.card2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_localFragment_to_configFragment);
+                mainViewModel.setShouldTranslate(true);
+            }
+        });
+
         super.setTransparentStatusBar(150, Color.WHITE);
     }
 

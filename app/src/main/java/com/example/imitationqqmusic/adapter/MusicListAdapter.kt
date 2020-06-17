@@ -70,7 +70,6 @@ class MusicListAdapter(private val listener: OnListItemClickListener) : ListAdap
             else -> {
                 view = LayoutInflater.from(parent.context).inflate(R.layout.music_list_item, parent, false)
                 holder = NormalHolder(view)
-
                 holder.itemView.setOnClickListener {
                     val holderIndex = holder.absoluteAdapterPosition
                     listener.onListItemClick(holderIndex - 1)
@@ -124,4 +123,6 @@ class MusicListAdapter(private val listener: OnListItemClickListener) : ListAdap
         this.checkedIndex = position
         notifyItemChanged(position)
     }
+
+    fun getCheckedIndex() = checkedIndex
 }

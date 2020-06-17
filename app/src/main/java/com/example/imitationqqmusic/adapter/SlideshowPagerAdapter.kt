@@ -37,7 +37,7 @@ class SlideshowPagerAdapter: ListAdapter<Any, SlideshowPagerAdapter.MyHolder>(Co
         }
     }
 
-    override fun getItemCount() = currentList.size + 2
+    override fun getItemCount() = if(currentList.size == 0 ) 0 else currentList.size + 2
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         with(holder.itemView){

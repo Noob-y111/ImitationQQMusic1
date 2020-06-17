@@ -1,11 +1,12 @@
 package com.example.imitationqqmusic.view.detail.play
 
-import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,7 +21,9 @@ import com.example.imitationqqmusic.model.bean.SongItem
 import com.example.imitationqqmusic.model.tools.DpPxUtils
 import com.example.imitationqqmusic.model.tools.ScreenUtils
 import com.example.imitationqqmusic.model.tools.TimeFormat
+import com.example.imitationqqmusic.service.Connection
 import com.example.imitationqqmusic.service.Connection.Companion.player
+import com.example.imitationqqmusic.view.current_list.CurrentListDialog
 import com.example.imitationqqmusic.view.detail.DetailModel
 import com.example.imitationqqmusic.view.main.MainViewModel
 import kotlinx.coroutines.MainScope
@@ -50,6 +53,21 @@ class PlayFragment() : Fragment() {
 
 //        binding.mtvDetailName.isSelected = true
 
+        binding.sbProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser){
+                    Connection.player?.seekTo(progress)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
+            }
+        })
         viewModel = DetailModel.newInstances(this)
         viewModel.currentSong.observe(viewLifecycleOwner, Observer {
             println("================it: $it")
@@ -124,7 +142,7 @@ class PlayFragment() : Fragment() {
             val position = player?.next()
             if (position == -1) return@setOnClickListener
             val map = mainViewModel.currentSong.value
-            val songItem = (map?.get("list") as ArrayList<SongItem>)[position!!]
+            val songItem = (map?.get("list") as List<SongItem>)[position!!]
             viewModel.changeSong(songItem)
             mainViewModel.changeCurrentSongPosition(position+1)
         }
@@ -134,9 +152,17 @@ class PlayFragment() : Fragment() {
             val position = player?.last()
             if (position == -1) return@setOnClickListener
             val map = mainViewModel.currentSong.value
-            val songItem = (map?.get("list") as ArrayList<SongItem>)[position!!]
+            val songItem = (map?.get("list") as List<SongItem>)[position!!]
             viewModel.changeSong(songItem)
             mainViewModel.changeCurrentSongPosition(position+1)
+        }
+
+        binding.ivDetailList.setOnClickListener {
+            val dialog = CurrentListDialog(
+                    mainViewModel.currentSong.value?.get("list") as List<SongItem>,
+                    null,
+                    Color.BLACK)
+            dialog.show(requireActivity().supportFragmentManager, null)
         }
     }
 

@@ -78,4 +78,18 @@
         android:layout_gravity="center"
         android:indeterminateTint="@color/colorPrimary"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_jump"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_anchorGravity="bottom|left"
+        android:layout_gravity="bottom|right"
+        tools:ignore="RtlHardcoded"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/jump"
+        android:backgroundTint="@color/colorPrimary"
+        app:fabCustomSize="20dp"
+        app:borderWidth="0dp"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
