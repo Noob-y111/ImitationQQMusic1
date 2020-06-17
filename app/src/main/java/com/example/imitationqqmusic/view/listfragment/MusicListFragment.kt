@@ -1,17 +1,24 @@
 package com.example.imitationqqmusic.view.listfragment
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Adapter
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.iterator
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -40,6 +47,20 @@ class MusicListFragment : BaseFragment() {
     private lateinit var binding: MusicListFragmentBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var viewModel: MusicListViewModel
+    private val listAdapter = MusicListAdapter(object : MusicListAdapter.OnListItemClickListener {
+        override fun onListItemClick(position: Int) {
+            var list: ArrayList<SongItem> = ArrayList()
+            viewModel.list.value?.let {
+                list = it
+            }
+            if (list.size == 0) return
+            val map = HashMap<String, Any>()
+            map["list"] = list
+            map["position"] = position
+            mainViewModel.changeCurrentSong(map)
+        }
+    })
+    private val receiver = Receiver()
 
     companion object {
         fun newInstance() = MusicListFragment()
@@ -101,20 +122,6 @@ class MusicListFragment : BaseFragment() {
             Navigation.findNavController(requireActivity(), R.id.fragment).navigateUp()
         }
 
-        val listAdapter = MusicListAdapter(object : MusicListAdapter.OnListItemClickListener {
-            override fun onListItemClick(position: Int) {
-                var list: ArrayList<SongItem> = ArrayList()
-                viewModel.list.value?.let {
-                    list = it
-                }
-                if (list.size == 0) return
-                val map = HashMap<String, Any>()
-                map["list"] = list
-                map["position"] = position
-                mainViewModel.changeCurrentSong(map)
-            }
-        })
-
         val layout = binding.appbar.getChildAt(0).layoutParams as AppBarLayout.LayoutParams
         layout.scrollFlags = 0
         viewModel.list.observe(viewLifecycleOwner, Observer {
@@ -123,6 +130,13 @@ class MusicListFragment : BaseFragment() {
                 layout.scrollFlags = flag
                 binding.appbar.getChildAt(0).layoutParams = layout
                 binding.pbListOnLoad.visibility = View.GONE
+
+                Connection.player?.getCurrentSong()?.let {item ->
+                    val index = it.indexOf(item)
+                    if (index != -1){
+                        listAdapter.setCheckedIndex(index + 1)
+                    }
+                }
             }
         })
 
@@ -201,6 +215,26 @@ class MusicListFragment : BaseFragment() {
 //                        }
 //            }).start()
         })
+
+        binding.fabJump.setOnClickListener {
+            binding.nvContainer.scrollTo(0, 0)
+        }
+
+        viewModel.floatingDisplay.observe(viewLifecycleOwner, Observer {
+            if (it){
+                binding.fabJump.visibility = View.VISIBLE
+            }else{
+                binding.fabJump.visibility = View.GONE
+            }
+        })
+
+        binding.nvContainer.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            viewModel.changeDisplayEnable()
+        })
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("change_checked_position")
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, intentFilter)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -231,6 +265,21 @@ class MusicListFragment : BaseFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         setStatusBar()
+    }
+
+    inner class Receiver: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when(intent?.action){
+                "change_checked_position" -> {
+                    println("=========================change_checked_position")
+                    Connection.player?.getCurrentSong()?.let {
+                        if (listAdapter.currentList.indexOf(it) != -1){
+                            listAdapter.setCheckedIndex(listAdapter.currentList.indexOf(it) + 1)
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -11,6 +11,7 @@ import com.example.imitationqqmusic.R
 import com.example.imitationqqmusic.adapter.SingerAdapter
 import com.example.imitationqqmusic.base.BaseFragment
 import com.example.imitationqqmusic.databinding.SingerFragmentBinding
+import com.example.imitationqqmusic.model.tools.ScreenUtils
 
 class SingerFragment : BaseFragment() {
 
@@ -62,6 +63,7 @@ class SingerFragment : BaseFragment() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
             binding.refresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
 
+        binding.refresh.setProgressViewOffset(true, 0, (ScreenUtils.getHeight(requireActivity()) * 0.09).toInt())
         binding.refresh.setOnRefreshListener {
             viewModel.isFromUser = true
             viewModel.updateSingerList(requireContext())

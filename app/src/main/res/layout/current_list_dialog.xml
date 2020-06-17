@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_root">
+
+    <LinearLayout
+        android:id="@+id/linear"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_play_style"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:minWidth="100dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:textColor="@color/color_888"
+            android:text="@string/random_play"/>
+
+
+        <ImageView
+            android:id="@+id/iv_add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/current_add"/>
+
+        <ImageView
+            android:id="@+id/iv_clear"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/clear_list"/>
+    </LinearLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/linear"
+        app:layout_constraintBottom_toTopOf="@+id/tv_exit"/>
+
+    <LinearLayout
+        android:id="@+id/circle_parent"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/vp2"
+        android:clickable="false"/>
+
+    <TextView
+        android:id="@+id/tv_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:padding="15dp"
+        android:textColor="@color/color_888"
+        android:textSize="15sp"
+        android:text="@string/exit"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

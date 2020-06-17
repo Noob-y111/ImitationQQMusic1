@@ -15,8 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:targetApi="q">
-        <activity android:name=".view.detail.DetailActivity"></activity>
+        tools:targetApi="q"
+        android:allowBackup="true">
+        <activity android:name=".view.login.LoginActivity" />
+        <activity android:name=".view.detail.DetailActivity" />
 
         <service
             android:name=".service.MusicService"

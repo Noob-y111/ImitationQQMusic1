@@ -10,6 +10,8 @@
     <string name="more">更多</string>
     <string name="default_user_name">有你就好</string>
     <string name="on_loading">正在加载…</string>
+    <string name="loading_complete">已经没有更多数据了</string>
+    <string name="loading_error">加载失败，点击重试</string>
     <string name="et_default_hint">点击搜索歌曲</string>
     <string name="search_hint">搜索</string>
     <string name="background">background</string>
@@ -21,4 +23,14 @@
     <string name="singer">歌手</string>
     <string name="rank">排行</string>
     <string name="kind">歌单</string>
+    <string name="exit">关闭</string>
+    <string name="random_play">随机播放</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="tourist"><![CDATA[游客模式>]]></string>
+    <string name="pro">请同意用户协议</string>
+    <string name="input_user_name">请输入账号</string>
+    <string name="input_password">请输入密码</string>
+    <string name="input_password_twice">请再次输入密码</string>
+    <string name="input_nickname">请输入昵称</string>
 </resources>

@@ -1,9 +1,13 @@
 package com.example.imitationqqmusic.view.main;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.lifecycle.Observer;
@@ -15,12 +19,13 @@ import com.example.imitationqqmusic.adapter.FooterPagerAdapter;
 import com.example.imitationqqmusic.base.BaseActivity;
 import com.example.imitationqqmusic.databinding.ActivityMainBinding;
 import com.example.imitationqqmusic.model.bean.SongItem;
+import com.example.imitationqqmusic.model.room_bean.User;
 import com.example.imitationqqmusic.service.Connection;
 import com.example.imitationqqmusic.service.MusicService;
+import com.example.imitationqqmusic.view.current_list.CurrentListDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends BaseActivity{
@@ -41,18 +46,20 @@ public class MainActivity extends BaseActivity{
     protected void initView() {
         Intent intent = new Intent(this, MusicService.class);
         startService(intent);
-        System.out.println("==============================bindService(intent, connection, Context.BIND_AUTO_CREATE): " + bindService(intent, connection, Context.BIND_AUTO_CREATE));
-
+        bindService(intent, connection, Service.BIND_AUTO_CREATE);
         viewModel = MainViewModel.getInstance(this, getApplication());
-//        final SongItem songItem = new SongItem();
-//        songItem.setName("我爱你1");
-//        songItem.setSinger("你是谁1");
-//        SongItem songItem1 = new SongItem();
-//        songItem1.setName("我爱你2");
-//        songItem1.setSinger("你是谁2");
-//        SongItem songItem2 = new SongItem();
-//        songItem2.setName("我爱你3");
-//        songItem2.setSinger("你是谁3");
+
+        Intent userIntent = getIntent();
+        if (userIntent != null){
+            Bundle bundle = userIntent.getBundleExtra("bundle");
+            if (bundle != null) {
+                User user = bundle.getParcelable("user");
+                viewModel.changeUser(user);
+                System.out.println("==============================user: " + (user));
+            }else {
+                viewModel.getUser(this);
+            }
+        }
 
         final FooterPagerAdapter adapter = new FooterPagerAdapter(new FooterPagerAdapter.OnItemClick() {
             @Override
@@ -62,7 +69,6 @@ public class MainActivity extends BaseActivity{
         }, getSupportFragmentManager());
 
         binding.clFooter.pager2Footer.setUserInputEnabled(false);
-
         binding.clFooter.pager2Footer.setAdapter(adapter);
         binding.clFooter.pager2Footer.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
@@ -78,11 +84,10 @@ public class MainActivity extends BaseActivity{
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                System.out.println("==============================onPageScrollStateChanged");
                 super.onPageScrollStateChanged(state);
                 if (state == ViewPager2.SCROLL_STATE_IDLE) {
                     int position = viewModel.getPosition();
-                    System.out.println("==============================position: " + position);
-                    System.out.println("==============================adapter.getItemCount(): " + (adapter.getItemCount()));
                     if (position == adapter.getItemCount() - 1) {
                         position = 1;
                         binding.clFooter.pager2Footer.setCurrentItem(position, false);
@@ -90,6 +95,7 @@ public class MainActivity extends BaseActivity{
                         position = adapter.getItemCount() - 2;
                         binding.clFooter.pager2Footer.setCurrentItem(position, false);
                     }
+
                     if (Connection.Companion.getPlayer() != null) {
                         viewModel.getPlayPath(adapter.getCurrentList().get(position-1), Connection.Companion.getPlayer());
                         viewModel.changePlayOrPause(Connection.Companion.getPlayer());
@@ -102,23 +108,23 @@ public class MainActivity extends BaseActivity{
         viewModel.currentSong.observe(this, new Observer<HashMap<String, Object>>() {
             @Override
             public void onChanged(final HashMap<String, Object> map) {
-                final ArrayList<SongItem> songItems = (ArrayList<SongItem>) map.get("list");
+
+                System.out.println("==============================currentSong.observe");
+
+                final List<SongItem> songItems = (List<SongItem>) map.get("list");
                 adapter.submitList(songItems, new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("==============================adapter.getItemCount: " + adapter.getItemCount());
                         binding.clFooter.pager2Footer.setUserInputEnabled(true);
-
                         int position = (Integer) map.get("position");
-                        System.out.println("==============================position: " + position);
 
                         if (Connection.Companion.getPlayer() != null && songItems != null) {
                             Connection.Companion.getPlayer().setCurrentData(songItems, position);
                             viewModel.getPlayPath(songItems.get(position), Connection.Companion.getPlayer());
+                        }else {
+                            System.out.println("==============================player is null");
                         }
                         viewModel.changeCurrentSongPosition(position + 1);
-                        viewModel.changePlayOrPause(Connection.Companion.getPlayer());
-                        binding.clFooter.ivFooterPlayPause.setImageResource(R.drawable.footer_pause);
                     }
                 });
             }
@@ -128,14 +134,18 @@ public class MainActivity extends BaseActivity{
         viewModel.playOrPause.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
+
+                System.out.println("==============================playOrPause.observe");
+
                 if (Connection.Companion.getPlayer() == null) return;
+
                 if (aBoolean) {
                     binding.clFooter.ivFooterPlayPause.setImageResource(R.drawable.footer_play);
-                    Connection.Companion.getPlayer().pauseMusic();
+                    if (viewModel.isFromUser()) Connection.Companion.getPlayer().pauseMusic();
                 } else {
                     binding.clFooter.ivFooterPlayPause.setImageResource(R.drawable.footer_pause);
                     if (!Connection.Companion.getPlayer().isPlaying()) {
-                        Connection.Companion.getPlayer().playMusic();
+                        if (viewModel.isFromUser()) Connection.Companion.getPlayer().playMusic();
                     }
                 }
             }
@@ -157,6 +167,7 @@ public class MainActivity extends BaseActivity{
         binding.clFooter.ivFooterPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                viewModel.setFromUser(true);
                 viewModel.changePlayOrPause(Connection.Companion.getPlayer());
             }
         });
@@ -196,13 +207,20 @@ public class MainActivity extends BaseActivity{
         binding.clFooter.ivCurrentList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (adapter.getItemCount() == 0) return;  //todo
+                if (adapter.getItemCount() == 0) return;
+                CurrentListDialog dialog = new CurrentListDialog(
+                        adapter.getCurrentList(),
+                        null,
+                        Color.WHITE);
+                dialog.show(getSupportFragmentManager(), null);
             }
         });
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("progress");
         intentFilter.addAction("set_max");
+        intentFilter.addAction("isPlaying");
+        intentFilter.addAction("current_info");
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
@@ -250,9 +268,17 @@ public class MainActivity extends BaseActivity{
                     break;
 
                 case "current_info":
+                    System.out.println("==============================current_info in main");
                     int index = intent.getIntExtra("position", -1);
                     if (index == -1) return;
-                    viewModel.changeCurrentSongPosition(index);
+                    viewModel.changeCurrentSongPosition(index + 1);
+                    break;
+
+                case "isPlaying":
+                    boolean isPlaying = intent.getBooleanExtra("isPlaying", false);
+                    System.out.println("==============================isPlaying: " + isPlaying);
+                    viewModel.setFromUser(false);
+                    viewModel.changePlayOrPause(!isPlaying);
                     break;
             }
         }

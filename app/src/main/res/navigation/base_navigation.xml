@@ -17,6 +17,13 @@
             app:exitAnim="@anim/new_activity_exit"
             app:popEnterAnim="@anim/old_activity_exit"
             app:popExitAnim="@anim/old_activity_enter" />
+        <action
+            android:id="@+id/action_localFragment_to_configFragment"
+            app:destination="@id/configFragment"
+            app:enterAnim="@anim/new_activity_enter"
+            app:exitAnim="@anim/new_activity_exit"
+            app:popEnterAnim="@anim/old_activity_exit"
+            app:popExitAnim="@anim/old_activity_enter" />
     </fragment>
     <fragment
         android:id="@+id/musicFragment"
@@ -33,6 +40,13 @@
         <action
             android:id="@+id/action_musicFragment_to_singerFragment"
             app:destination="@id/singerFragment"
+            app:enterAnim="@anim/new_activity_enter"
+            app:exitAnim="@anim/new_activity_exit"
+            app:popEnterAnim="@anim/old_activity_exit"
+            app:popExitAnim="@anim/old_activity_enter" />
+        <action
+            android:id="@+id/action_musicFragment_to_musicListFragment"
+            app:destination="@id/musicListFragment"
             app:enterAnim="@anim/new_activity_enter"
             app:exitAnim="@anim/new_activity_exit"
             app:popEnterAnim="@anim/old_activity_exit"
@@ -74,4 +88,9 @@
             app:popEnterAnim="@anim/old_activity_exit"
             app:popExitAnim="@anim/old_activity_enter" />
     </fragment>
+    <fragment
+        android:id="@+id/configFragment"
+        android:name="com.example.imitationqqmusic.view.config.ConfigFragment"
+        android:label="config_fragment"
+        tools:layout="@layout/config_fragment" />
 </navigation>

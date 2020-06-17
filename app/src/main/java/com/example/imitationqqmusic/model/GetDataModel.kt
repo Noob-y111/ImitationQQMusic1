@@ -10,17 +10,13 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.example.imitationqqmusic.R
+import com.example.imitationqqmusic.adapter.RecyclerSimpleAdapter
+import com.example.imitationqqmusic.model.bean.Album
 import com.example.imitationqqmusic.model.bean.MusicFragmentData
 import com.example.imitationqqmusic.model.bean.Singer
 import com.example.imitationqqmusic.model.bean.SongItem
-import com.example.imitationqqmusic.service.Connection
 import com.example.imitationqqmusic.service.MusicService
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import org.json.JSONObject
-import java.lang.Exception
-import java.lang.StringBuilder
-import kotlin.math.sin
 
 class GetDataModel(private val context: Context) {
 
@@ -162,7 +158,7 @@ class GetDataModel(private val context: Context) {
         VolleyInstance.getInstance(context).requestQueue.add(stringRequest)
     }
 
-    fun getSongList(type: Int, list: MutableLiveData<ArrayList<SongItem>>){
+    fun getSongList(type: Int, list: MutableLiveData<ArrayList<SongItem>>) {
         val url = "https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?g_tk=5381&uin=0&format=json&inCharset=utf-8&outCharset=utf-8¬ice=0&platform=h5&needNewCode=1&tpl=3&page=detail&type=top&topid=$type&_=1519963122923"
         val stringRequest = StringRequest(
                 Request.Method.GET,
@@ -173,7 +169,7 @@ class GetDataModel(private val context: Context) {
                         val songList = data.getJSONArray("songlist")
                         val songs = ArrayList<SongItem>()
                         val size = songList.length()
-                        for(j in 0 until size){
+                        for (j in 0 until size) {
                             val song = SongItem()
                             val songInfo = songList.getJSONObject(j)
                             val songData = songInfo.getJSONObject("data")
@@ -181,7 +177,7 @@ class GetDataModel(private val context: Context) {
                             val singerList = songData.getJSONArray("singer")
                             val length = singerList.length()
                             song.singer = ""
-                            for (index in 0 until length){
+                            for (index in 0 until length) {
                                 val singer = singerList.getJSONObject(index)
                                 song.singer += singer.getString("name")
                                 if (index != length - 1) {
@@ -269,14 +265,14 @@ class GetDataModel(private val context: Context) {
                                     val smallUrl = topInfo.getString("pic_v12")
                                     val songList = data.getJSONArray("songlist")
                                     val songs = ArrayList<SongItem>()
-                                    for(j in 0..2){
+                                    for (j in 0..2) {
                                         val song = SongItem()
                                         val songInfo = songList.getJSONObject(j)
                                         val songData = songInfo.getJSONObject("data")
                                         val singerList = songData.getJSONArray("singer")
                                         val size = singerList.length()
                                         song.singer = ""
-                                        for (index in 0 until size){
+                                        for (index in 0 until size) {
                                             val singer = singerList.getJSONObject(index)
                                             song.singer += singer.getString("name")
                                             if (index != size - 1) {
@@ -287,7 +283,7 @@ class GetDataModel(private val context: Context) {
                                         songs.add(song)
                                     }
 
-                                    synchronized(list){
+                                    synchronized(list) {
                                         val item = MusicFragmentData(name, smallUrl, smallUrl, i, songs)
                                         list.add(item)
                                         if (list.size == (topId[1] - topId[0])) {
@@ -308,7 +304,7 @@ class GetDataModel(private val context: Context) {
 
     fun getPlayPath(song: SongItem, player: MusicService.MyBinder) {
         Thread(Runnable {
-            when(song.kind){
+            when (song.kind) {
                 ApiKind.QQ -> {
                     val token =
                             "https://u.y.qq.com/cgi-bin/musicu.fcg?format=json&data=%7B%22req_0%22%3A%7B%22module%22%" +
@@ -367,7 +363,39 @@ class GetDataModel(private val context: Context) {
         }).start()
     }
 
-    fun getListFromSinger(id: Int, list: MutableLiveData<ArrayList<SongItem>>){
+    fun getListByAlbumId(id: Int, list: MutableLiveData<ArrayList<SongItem>>){
+        val url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.album.getAlbumInfo&format=json&album_id=$id"
+        val stringRequest = StringRequest(
+                Request.Method.GET,
+                url,
+                Response.Listener {
+                    Thread(Runnable {
+                        val data = JSONObject(it)
+                        val songList = data.getJSONArray("songlist")
+                        val size = songList.length()
+                        val songs = ArrayList<SongItem>()
+                        for (i in 0 until size) {
+                            val song = SongItem()
+                            val oneSong = songList.getJSONObject(i)
+                            song.name = oneSong.getString("title")
+                            song.singer = oneSong.getString("author")
+                            song.songMid = oneSong.getString("song_id")
+                            song.albumPath = oneSong.getString("pic_huge")
+                            song.isFromInternet = true
+                            song.kind = ApiKind.baidu
+                            songs.add(song)
+                        }
+                        list.postValue(songs)
+                    }).start()
+                },
+                Response.ErrorListener {
+
+                }
+        )
+        VolleyInstance.getInstance(context).requestQueue.add(stringRequest)
+    }
+
+    fun getListFromSinger(id: Int, list: MutableLiveData<ArrayList<SongItem>>) {
         val url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.artist.getSongList&format=json=1&tinguid=$id&offset=2&limits=100"
         val stringRequest = StringRequest(
                 Request.Method.GET,
@@ -399,7 +427,7 @@ class GetDataModel(private val context: Context) {
         VolleyInstance.getInstance(context).requestQueue.add(stringRequest)
     }
 
-    fun getSingerList(list: MutableLiveData<ArrayList<Singer>>){
+    fun getSingerList(list: MutableLiveData<ArrayList<Singer>>) {
         val url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.artist.get72HotArtist&format=json=1&offset=0&limit=100"
         val stringRequest = StringRequest(
                 Request.Method.GET,
@@ -411,7 +439,7 @@ class GetDataModel(private val context: Context) {
                         val size = artists.length()
 
                         val singerList = ArrayList<Singer>()
-                        for (i in 0 until size){
+                        for (i in 0 until size) {
                             val singer = artists.getJSONObject(i)
                             val name = singer.getString("name")
                             val id = singer.getString("ting_uid")
@@ -424,6 +452,81 @@ class GetDataModel(private val context: Context) {
                 },
                 Response.ErrorListener {
 
+                }
+        )
+        VolleyInstance.getInstance(context).requestQueue.add(stringRequest)
+    }
+
+    interface UpdateOffset {
+        fun update(size: Int)
+    }
+
+    fun getAlbumList(list: MutableLiveData<ArrayList<Album>>, state: MutableLiveData<RecyclerSimpleAdapter.State>, listener: UpdateOffset) {
+        val url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.plaza.getRecommendAlbum&format=json&offset=0&limit=10"
+        val stringRequest = StringRequest(
+                Request.Method.GET,
+                url,
+                Response.Listener {
+                    val data = JSONObject(it)
+                    val albums = data.getJSONObject("plaze_album_list")
+                            .getJSONObject("RM")
+                            .getJSONObject("album_list")
+                            .getJSONArray("list")
+                    val size = albums.length()
+
+                    val albumList = ArrayList<Album>()
+                    for (i in 0 until size) {
+                        val album = albums.getJSONObject(i)
+                        albumList.add(Album(
+                                album.getString("album_id"),
+                                album.getString("pic_radio"),
+                                album.getString("title"))
+                        )
+                    }
+                    listener.update(size)
+                    list.postValue(albumList)
+                },
+                Response.ErrorListener {
+                    state.postValue(RecyclerSimpleAdapter.State.Error)
+                }
+        )
+        VolleyInstance.getInstance(context).requestQueue.add(stringRequest)
+    }
+
+    fun getAlbumList(list: MutableLiveData<ArrayList<Album>>, count: Int, offset: Int, state: MutableLiveData<RecyclerSimpleAdapter.State>, listener: UpdateOffset) {
+        if (offset >= 95 ) {
+            state.postValue(RecyclerSimpleAdapter.State.Complete)
+            return
+        }
+        val url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.plaza.getRecommendAlbum&format=json&offset=$offset&limit=$count"
+        val stringRequest = StringRequest(
+                Request.Method.GET,
+                url,
+                Response.Listener {
+                    val data = JSONObject(it)
+                    val albums = data.getJSONObject("plaze_album_list")
+                            .getJSONObject("RM")
+                            .getJSONObject("album_list")
+                            .getJSONArray("list")
+                    val size = albums.length()
+
+                    val albumList = ArrayList<Album>()
+                    for (i in 0 until size) {
+                        val album = albums.getJSONObject(i)
+                        albumList.add(Album(
+                                album.getString("album_id"),
+                                album.getString("pic_big"),
+                                album.getString("title"))
+                        )
+                    }
+                    listener.update(size)
+                    val arrayList = (list.value?.toList() as ArrayList<Album>)
+                    arrayList.addAll(albumList)
+                    list.postValue(arrayList)
+                },
+                Response.ErrorListener {
+                    it.printStackTrace()
+                    state.postValue(RecyclerSimpleAdapter.State.Error)
                 }
         )
         VolleyInstance.getInstance(context).requestQueue.add(stringRequest)

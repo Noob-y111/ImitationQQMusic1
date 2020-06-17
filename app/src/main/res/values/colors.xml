@@ -12,4 +12,5 @@
     <color name="tabGrayTextColor">#aaa</color>
     <color name="pressedColor">#eee</color>
     <color name="detail_text_color">#ddd</color>
+    <color name="color_888">#888888</color>
 </resources>
