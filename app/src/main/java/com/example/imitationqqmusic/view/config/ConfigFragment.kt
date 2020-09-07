@@ -9,9 +9,16 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.imitationqqmusic.R
+import com.example.imitationqqmusic.adapter.ConfigAdapter
+import com.example.imitationqqmusic.adapter.CurrentListAdapter
 import com.example.imitationqqmusic.base.BaseFragment
+import com.example.imitationqqmusic.custom.ConfigDecoration
+import com.example.imitationqqmusic.custom.Decoration
 import com.example.imitationqqmusic.databinding.ConfigFragmentBinding
+import com.example.imitationqqmusic.model.bean.SongItem
+import com.example.imitationqqmusic.view.main.MainViewModel
 
 class ConfigFragment : BaseFragment() {
 
@@ -38,6 +45,16 @@ class ConfigFragment : BaseFragment() {
         binding.configToolbar.setNavigationOnClickListener {
             Navigation.findNavController(it).navigateUp()
         }
+
+        with(binding.recyclerConfig){
+            layoutManager = LinearLayoutManager(requireContext())
+            val adapter = ConfigAdapter(
+                    MainViewModel.getInstance(requireActivity(), requireActivity().application).loginUser.value!!
+            )
+            this.adapter = adapter
+            addItemDecoration(ConfigDecoration(intArrayOf(0, 4), arrayOf("个人信息", "其他"), 20))
+        }
+
     }
 
     override fun onCreateOptionMenuOnToolBar(toolbar: Toolbar?) {

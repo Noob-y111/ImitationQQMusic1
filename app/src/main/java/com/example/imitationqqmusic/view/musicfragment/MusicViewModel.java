@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.imitationqqmusic.adapter.AlbumAdapter;
 import com.example.imitationqqmusic.adapter.RecyclerSimpleAdapter;
 import com.example.imitationqqmusic.model.GetDataModel;
 import com.example.imitationqqmusic.model.bean.Album;
@@ -31,22 +32,13 @@ public class MusicViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Album>> _list = new MutableLiveData<>();
     LiveData<ArrayList<Album>> list = _list;
 
-    private MutableLiveData<RecyclerSimpleAdapter.State> _footerState = new MutableLiveData<>();
-    LiveData<RecyclerSimpleAdapter.State> footerState = _footerState;
+    private MutableLiveData<AlbumAdapter.State> _footerState = new MutableLiveData<>();
+    LiveData<AlbumAdapter.State> footerState = _footerState;
 
-    public void changeFooterState(RecyclerSimpleAdapter.State state){
+    public void changeFooterState(AlbumAdapter.State state){
         _footerState.postValue(state);
     }
 
-//    private boolean refreshEnable = false;
-//
-//    public boolean isRefreshEnable() {
-//        return refreshEnable;
-//    }
-//
-//    public void setRefreshEnable(boolean refreshEnable) {
-//        this.refreshEnable = refreshEnable;
-//    }
 
     private int offset = 0;
     private static final int count = 10;
@@ -64,19 +56,7 @@ public class MusicViewModel extends ViewModel {
     public void resetGetList(final Context context){
         offset = 0;
         isLoading = false;
-        _footerState.postValue(RecyclerSimpleAdapter.State.Loading);
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                GetDataModel.Companion.singleTon(context).getAlbumList(_list, _footerState, new GetDataModel.UpdateOffset() {
-//                    @Override
-//                    public void update(int size) {
-//                        offset += count;
-//                    }
-//                });
-//            }
-//        }, 5000);
+        _footerState.postValue(AlbumAdapter.State.Loading);
         GetDataModel.Companion.singleTon(context).getAlbumList(_list, _footerState, new GetDataModel.UpdateOffset() {
             @Override
             public void update(int size) {
@@ -84,16 +64,16 @@ public class MusicViewModel extends ViewModel {
             }
         });
     }
-
-    public void getList(Context context, final int count){
-        GetDataModel.Companion.singleTon(context).getAlbumList(_list, count, offset, _footerState, new GetDataModel.UpdateOffset() {
-            @Override
-            public void update(int size) {
-                offset += size;
-                isLoading = false;
-            }
-        });
-    }
+//
+//    public void getList(Context context, final int count){
+//        GetDataModel.Companion.singleTon(context).getAlbumList(_list, count, offset, _footerState, new GetDataModel.UpdateOffset() {
+//            @Override
+//            public void update(int size) {
+//                offset += size;
+//                isLoading = false;
+//            }
+//        });
+//    }
 
     private boolean isLoading = false;
 
@@ -105,13 +85,13 @@ public class MusicViewModel extends ViewModel {
         isLoading = loading;
     }
 
-    public void loadMore(Context context, RecyclerSimpleAdapter.State state){
-        if (state == RecyclerSimpleAdapter.State.Complete) return;
-        if (isLoading) return;
-        isLoading = true;
-        _footerState.postValue(RecyclerSimpleAdapter.State.Loading);
-        getList(context, count);
-    }
+//    public void loadMore(Context context, RecyclerSimpleAdapter.State state){
+//        if (state == RecyclerSimpleAdapter.State.Complete) return;
+//        if (isLoading) return;
+//        isLoading = true;
+//        _footerState.postValue(RecyclerSimpleAdapter.State.Loading);
+//        getList(context, count);
+//    }
 
     public void getSlideshowList() {
         new Thread(new Runnable() {

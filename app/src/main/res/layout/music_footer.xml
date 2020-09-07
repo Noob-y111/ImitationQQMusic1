@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="70dp"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:layout_gravity="center">
-
-    <ProgressBar
-        android:id="@+id/on_loading_pb"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:indeterminateTint="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/on_loading_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/blackGrayTextColor"
-        android:text="@string/on_loading"
+        android:text="@string/load_more"
         android:layout_margin="10dp"
-        android:textSize="18sp"/>
+        android:textSize="20sp"
+        android:ems="1"/>
 
 </LinearLayout>

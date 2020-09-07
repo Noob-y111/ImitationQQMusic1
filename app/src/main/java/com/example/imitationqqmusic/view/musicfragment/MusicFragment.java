@@ -180,8 +180,8 @@ public class MusicFragment extends BaseFragment {
             }
         });
 
-        binding.recyclerMusicFragment.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        final RecyclerSimpleAdapter simpleAdapter = new RecyclerSimpleAdapter(ScreenUtils.Companion.getWidth(requireActivity()),
+        binding.recyclerMusicFragment.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        final RecyclerSimpleAdapter simpleAdapter = new RecyclerSimpleAdapter(mainViewModel,
                 new RecyclerSimpleAdapter.OnItemClick() {
                     @Override
                     public void onClick(@NotNull Album album) {
@@ -195,12 +195,12 @@ public class MusicFragment extends BaseFragment {
                         mainViewModel.setShouldTranslate(true);
                     }
                 });
-        simpleAdapter.setListener(new RecyclerSimpleAdapter.OnErrorClickCallBack() {
-            @Override
-            public void onErrorClick() {
-                mViewModel.loadMore(requireContext(), simpleAdapter.getState());
-            }
-        });
+//        simpleAdapter.setListener(new RecyclerSimpleAdapter.OnErrorClickCallBack() {
+//            @Override
+//            public void onErrorClick() {
+//                mViewModel.loadMore(requireContext(), simpleAdapter.getState());
+//            }
+//        });
         binding.recyclerMusicFragment.setAdapter(simpleAdapter);
 
         mViewModel.list.observe(getViewLifecycleOwner(), new Observer<ArrayList<Album>>() {
@@ -219,7 +219,7 @@ public class MusicFragment extends BaseFragment {
         binding.srlMusic.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mViewModel.resetGetList(requireContext());
+//                mViewModel.resetGetList(requireContext());
             }
         });
 
@@ -265,51 +265,54 @@ public class MusicFragment extends BaseFragment {
             }
         });
 
-        mViewModel.footerState.observe(getViewLifecycleOwner(), new Observer<RecyclerSimpleAdapter.State>() {
-            @Override
-            public void onChanged(RecyclerSimpleAdapter.State state) {
-                simpleAdapter.setState(state);
-                simpleAdapter.notifyItemChanged(simpleAdapter.getItemCount() - 1);
-                if (state == RecyclerSimpleAdapter.State.Error){
-                    binding.srlMusic.setRefreshing(false);
-                    mViewModel.setLoading(false);
-                }
-            }
-        });
 
-//        binding.appbar.addOnOffsetChangedListener(new AppbarStateChangedListener() {
+
+//        mViewModel.footerState.observe(getViewLifecycleOwner(), new Observer<RecyclerSimpleAdapter.State>() {
 //            @Override
-//            public void onStateChanged(@Nullable AppBarLayout appbar, @NotNull State state) {
-//                if (state == State.EXPANDED) {
-//                    System.out.println("==============================state change mViewModel.isRefreshEnable(): " + (mViewModel.isRefreshEnable()));
-//                    mViewModel.setRefreshEnable(true);
-//                } else {
-//                    mViewModel.setRefreshEnable(false);
+//            public void onChanged(RecyclerSimpleAdapter.State state) {
+//                simpleAdapter.setState(state);
+//                simpleAdapter.notifyItemChanged(simpleAdapter.getItemCount() - 1);
+//                if (state == RecyclerSimpleAdapter.State.Error){
+//                    binding.srlMusic.setRefreshing(false);
+//                    mViewModel.setLoading(false);
 //                }
 //            }
 //        });
 
-        binding.scroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        binding.appbar.addOnOffsetChangedListener(new AppbarStateChangedListener() {
             @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > oldScrollY){
-                    if (binding.srlMusic.isRefreshing()) {
-                        mViewModel.changeFooterState(RecyclerSimpleAdapter.State.Gone);
-                        return;
-                    }
-                    if (scrollY <= v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() && scrollY >= v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() -20){
-                        mViewModel.loadMore(requireContext(), simpleAdapter.getState());
-                    }
-                }
-
-                if (scrollY == 0){
+            public void onStateChanged(@Nullable AppBarLayout appbar, @NotNull State state) {
+                System.out.println("==============================state: " + (state));
+                if (state == State.EXPANDED) {
                     binding.srlMusic.setEnabled(true);
-                }else {
+                } else {
                     if (binding.srlMusic.isRefreshing()) return;
                     binding.srlMusic.setEnabled(false);
                 }
             }
         });
+
+//        binding.scroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY > oldScrollY){
+//                    if (binding.srlMusic.isRefreshing()) {
+//                        mViewModel.changeFooterState(RecyclerSimpleAdapter.State.Gone);
+//                        return;
+//                    }
+//                    if (scrollY <= v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() && scrollY >= v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() -20){
+//                        mViewModel.loadMore(requireContext(), simpleAdapter.getState());
+//                    }
+//                }
+//
+//                if (scrollY == 0){
+//                    binding.srlMusic.setEnabled(true);
+//                }else {
+//                    if (binding.srlMusic.isRefreshing()) return;
+//                    binding.srlMusic.setEnabled(false);
+//                }
+//            }
+//        });
 
     }
 
