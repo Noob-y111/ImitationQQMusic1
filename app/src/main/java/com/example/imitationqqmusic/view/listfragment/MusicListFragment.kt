@@ -34,6 +34,7 @@ import com.example.imitationqqmusic.adapter.MusicListAdapter
 import com.example.imitationqqmusic.adapter.RecyclerSimpleAdapter
 import com.example.imitationqqmusic.base.BaseFragment
 import com.example.imitationqqmusic.custom.AppbarStateChangedListener
+import com.example.imitationqqmusic.custom.Decoration
 import com.example.imitationqqmusic.databinding.MusicListFragmentBinding
 import com.example.imitationqqmusic.model.GetDataModel
 import com.example.imitationqqmusic.model.bean.SongItem
@@ -143,7 +144,8 @@ class MusicListFragment : BaseFragment() {
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(requireContext())
             itemAnimator = DefaultItemAnimator()
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+//            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            addItemDecoration(Decoration())
             this.adapter = listAdapter
         }
 

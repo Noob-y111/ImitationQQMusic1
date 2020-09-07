@@ -10,6 +10,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.example.imitationqqmusic.R
+import com.example.imitationqqmusic.adapter.AlbumAdapter
 import com.example.imitationqqmusic.adapter.RecyclerSimpleAdapter
 import com.example.imitationqqmusic.model.bean.Album
 import com.example.imitationqqmusic.model.bean.MusicFragmentData
@@ -131,7 +132,7 @@ class GetDataModel(private val context: Context) {
         val stringRequest = StringRequest(
                 Request.Method.GET,
                 url,
-                Response.Listener {
+                {
                     Thread(Runnable {
                         val data = JSONObject(it.substring(12, it.length - 2))
                         val songList = data.getJSONArray("song_list")
@@ -151,7 +152,7 @@ class GetDataModel(private val context: Context) {
                         list.postValue(songs)
                     }).start()
                 },
-                Response.ErrorListener {
+                {
 
                 }
         )
@@ -432,7 +433,7 @@ class GetDataModel(private val context: Context) {
         val stringRequest = StringRequest(
                 Request.Method.GET,
                 url,
-                Response.Listener {
+                {
                     Thread(Runnable {
                         val data = JSONObject(it)
                         val artists = data.getJSONArray("artist")
@@ -450,7 +451,7 @@ class GetDataModel(private val context: Context) {
                         list.postValue(singerList)
                     }).start()
                 },
-                Response.ErrorListener {
+                {
 
                 }
         )
@@ -461,12 +462,12 @@ class GetDataModel(private val context: Context) {
         fun update(size: Int)
     }
 
-    fun getAlbumList(list: MutableLiveData<ArrayList<Album>>, state: MutableLiveData<RecyclerSimpleAdapter.State>, listener: UpdateOffset) {
+    fun getAlbumList(list: MutableLiveData<ArrayList<Album>>, state: MutableLiveData<AlbumAdapter.State>, listener: UpdateOffset) {
         val url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.plaza.getRecommendAlbum&format=json&offset=0&limit=10"
         val stringRequest = StringRequest(
                 Request.Method.GET,
                 url,
-                Response.Listener {
+                {
                     val data = JSONObject(it)
                     val albums = data.getJSONObject("plaze_album_list")
                             .getJSONObject("RM")
@@ -486,23 +487,23 @@ class GetDataModel(private val context: Context) {
                     listener.update(size)
                     list.postValue(albumList)
                 },
-                Response.ErrorListener {
-                    state.postValue(RecyclerSimpleAdapter.State.Error)
+                {
+                    state.postValue(AlbumAdapter.State.Error)
                 }
         )
         VolleyInstance.getInstance(context).requestQueue.add(stringRequest)
     }
 
-    fun getAlbumList(list: MutableLiveData<ArrayList<Album>>, count: Int, offset: Int, state: MutableLiveData<RecyclerSimpleAdapter.State>, listener: UpdateOffset) {
+    fun getAlbumList(list: MutableLiveData<ArrayList<Album>>, count: Int, offset: Int, state: MutableLiveData<AlbumAdapter.State>, listener: UpdateOffset) {
         if (offset >= 95 ) {
-            state.postValue(RecyclerSimpleAdapter.State.Complete)
+            state.postValue(AlbumAdapter.State.Complete)
             return
         }
         val url = "http://tingapi.ting.baidu.com/v1/restserver/ting?from=qianqian&version=2.1.0&method=baidu.ting.plaza.getRecommendAlbum&format=json&offset=$offset&limit=$count"
         val stringRequest = StringRequest(
                 Request.Method.GET,
                 url,
-                Response.Listener {
+                {
                     val data = JSONObject(it)
                     val albums = data.getJSONObject("plaze_album_list")
                             .getJSONObject("RM")
@@ -524,9 +525,9 @@ class GetDataModel(private val context: Context) {
                     arrayList.addAll(albumList)
                     list.postValue(arrayList)
                 },
-                Response.ErrorListener {
+                {
                     it.printStackTrace()
-                    state.postValue(RecyclerSimpleAdapter.State.Error)
+                    state.postValue(AlbumAdapter.State.Error)
                 }
         )
         VolleyInstance.getInstance(context).requestQueue.add(stringRequest)
